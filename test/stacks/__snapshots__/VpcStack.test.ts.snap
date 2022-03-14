@@ -1,0 +1,223 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot Test 1`] = `
+Object {
+  "Parameters": Object {
+    "BootstrapVersion": Object {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
+  "Resources": Object {
+    "testvpc8985080E": Object {
+      "Properties": Object {
+        "CidrBlock": "10.0.0.0/16",
+        "EnableDnsHostnames": true,
+        "EnableDnsSupport": true,
+        "InstanceTenancy": "default",
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "test-vpc",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::VPC",
+    },
+    "testvpcIGW2C2BA83F": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "test-vpc",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::InternetGateway",
+    },
+    "testvpcPublicSubnet1DefaultRouteB1E474AB": Object {
+      "DependsOn": Array [
+        "testvpcVPCGW7060AA15",
+      ],
+      "Properties": Object {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": Object {
+          "Ref": "testvpcIGW2C2BA83F",
+        },
+        "RouteTableId": Object {
+          "Ref": "testvpcPublicSubnet1RouteTable180BB588",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "testvpcPublicSubnet1RouteTable180BB588": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "test-vpc-stack/test-vpc/PublicSubnet1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "testvpc8985080E",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "testvpcPublicSubnet1RouteTableAssociation14A2D92F": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "testvpcPublicSubnet1RouteTable180BB588",
+        },
+        "SubnetId": Object {
+          "Ref": "testvpcPublicSubnet1Subnet01CF7554",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "testvpcPublicSubnet1Subnet01CF7554": Object {
+      "Properties": Object {
+        "AvailabilityZone": Object {
+          "Fn::Select": Array [
+            0,
+            Object {
+              "Fn::GetAZs": "",
+            },
+          ],
+        },
+        "CidrBlock": "10.0.0.0/24",
+        "MapPublicIpOnLaunch": true,
+        "Tags": Array [
+          Object {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public",
+          },
+          Object {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public",
+          },
+          Object {
+            "Key": "Name",
+            "Value": "test-vpc-stack/test-vpc/PublicSubnet1",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "testvpc8985080E",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "testvpcPublicSubnet2DefaultRoute39BC0F35": Object {
+      "DependsOn": Array [
+        "testvpcVPCGW7060AA15",
+      ],
+      "Properties": Object {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": Object {
+          "Ref": "testvpcIGW2C2BA83F",
+        },
+        "RouteTableId": Object {
+          "Ref": "testvpcPublicSubnet2RouteTable28A079F9",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "testvpcPublicSubnet2RouteTable28A079F9": Object {
+      "Properties": Object {
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "test-vpc-stack/test-vpc/PublicSubnet2",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "testvpc8985080E",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "testvpcPublicSubnet2RouteTableAssociationACF92511": Object {
+      "Properties": Object {
+        "RouteTableId": Object {
+          "Ref": "testvpcPublicSubnet2RouteTable28A079F9",
+        },
+        "SubnetId": Object {
+          "Ref": "testvpcPublicSubnet2Subnet4E9D9728",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "testvpcPublicSubnet2Subnet4E9D9728": Object {
+      "Properties": Object {
+        "AvailabilityZone": Object {
+          "Fn::Select": Array [
+            1,
+            Object {
+              "Fn::GetAZs": "",
+            },
+          ],
+        },
+        "CidrBlock": "10.0.1.0/24",
+        "MapPublicIpOnLaunch": true,
+        "Tags": Array [
+          Object {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public",
+          },
+          Object {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public",
+          },
+          Object {
+            "Key": "Name",
+            "Value": "test-vpc-stack/test-vpc/PublicSubnet2",
+          },
+        ],
+        "VpcId": Object {
+          "Ref": "testvpc8985080E",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "testvpcVPCGW7060AA15": Object {
+      "Properties": Object {
+        "InternetGatewayId": Object {
+          "Ref": "testvpcIGW2C2BA83F",
+        },
+        "VpcId": Object {
+          "Ref": "testvpc8985080E",
+        },
+      },
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+    },
+  },
+  "Rules": Object {
+    "CheckBootstrapVersion": Object {
+      "Assertions": Array [
+        Object {
+          "Assert": Object {
+            "Fn::Not": Array [
+              Object {
+                "Fn::Contains": Array [
+                  Array [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  Object {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;

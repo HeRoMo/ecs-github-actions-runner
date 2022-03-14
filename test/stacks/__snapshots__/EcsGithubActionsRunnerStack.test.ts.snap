@@ -1,0 +1,633 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot Test 1`] = `
+Object {
+  "Parameters": Object {
+    "BootstrapVersion": Object {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+    "SsmParameterValueawsserviceecsoptimizedamiamazonlinux2arm64recommendedimageidC96584B6F00A464EAD1953AFF4B05118Parameter": Object {
+      "Default": "/aws/service/ecs/optimized-ami/amazon-linux-2/arm64/recommended/image_id",
+      "Type": "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+    },
+    "SsmParameterValueawsserviceecsoptimizedamiamazonlinux2recommendedimageidC96584B6F00A464EAD1953AFF4B05118Parameter": Object {
+      "Default": "/aws/service/ecs/optimized-ami/amazon-linux-2/recommended/image_id",
+      "Type": "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+    },
+  },
+  "Resources": Object {
+    "testrunner3196B9C4": Object {
+      "Properties": Object {
+        "CapacityProviders": Array [
+          Object {
+            "Ref": "testrunnerAsgCapacityProvideramd647BF90295",
+          },
+          Object {
+            "Ref": "testrunnerAsgCapacityProviderarm6469ABD66E",
+          },
+        ],
+        "Cluster": Object {
+          "Ref": "testrunner60D7B13B",
+        },
+        "DefaultCapacityProviderStrategy": Array [],
+      },
+      "Type": "AWS::ECS::ClusterCapacityProviderAssociations",
+    },
+    "testrunner60D7B13B": Object {
+      "Properties": Object {
+        "ClusterName": "test-runner",
+      },
+      "Type": "AWS::ECS::Cluster",
+    },
+    "testrunnerASGamd64ASG477C7D76": Object {
+      "Properties": Object {
+        "AutoScalingGroupName": "test-runner-amd64",
+        "LaunchConfigurationName": Object {
+          "Ref": "testrunnerASGamd64LaunchConfigF11DA921",
+        },
+        "MaxSize": "1",
+        "MinSize": "0",
+        "NewInstancesProtectedFromScaleIn": true,
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "PropagateAtLaunch": true,
+            "Value": "test-runner-stack/test-runner/ASG-amd64",
+          },
+        ],
+        "TerminationPolicies": Array [
+          "OldestInstance",
+          "Default",
+        ],
+        "VPCZoneIdentifier": Array [
+          Object {
+            "Fn::ImportValue": "test-vpc-stack:ExportsOutputReftestvpcPublicSubnet1Subnet01CF7554F3858355",
+          },
+          Object {
+            "Fn::ImportValue": "test-vpc-stack:ExportsOutputReftestvpcPublicSubnet2Subnet4E9D9728B25B3FFC",
+          },
+        ],
+      },
+      "Type": "AWS::AutoScaling::AutoScalingGroup",
+      "UpdatePolicy": Object {
+        "AutoScalingScheduledAction": Object {
+          "IgnoreUnmodifiedGroupSizeProperties": true,
+        },
+      },
+    },
+    "testrunnerASGamd64InstanceProfile828F9683": Object {
+      "Properties": Object {
+        "Roles": Array [
+          Object {
+            "Ref": "testrunnerASGamd64InstanceRole5BE4E643",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::InstanceProfile",
+    },
+    "testrunnerASGamd64InstanceRole5BE4E643": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "ec2.",
+                      Object {
+                        "Ref": "AWS::URLSuffix",
+                      },
+                    ],
+                  ],
+                },
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "test-runner-stack/test-runner/ASG-amd64",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "testrunnerASGamd64InstanceRoleDefaultPolicy878D6338": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "ecs:DeregisterContainerInstance",
+                "ecs:RegisterContainerInstance",
+                "ecs:Submit*",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::GetAtt": Array [
+                  "testrunner60D7B13B",
+                  "Arn",
+                ],
+              },
+            },
+            Object {
+              "Action": Array [
+                "ecs:Poll",
+                "ecs:StartTelemetrySession",
+              ],
+              "Condition": Object {
+                "ArnEquals": Object {
+                  "ecs:cluster": Object {
+                    "Fn::GetAtt": Array [
+                      "testrunner60D7B13B",
+                      "Arn",
+                    ],
+                  },
+                },
+              },
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            Object {
+              "Action": Array [
+                "ecs:DiscoverPollEndpoint",
+                "ecr:GetAuthorizationToken",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "testrunnerASGamd64InstanceRoleDefaultPolicy878D6338",
+        "Roles": Array [
+          Object {
+            "Ref": "testrunnerASGamd64InstanceRole5BE4E643",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "testrunnerASGamd64LaunchConfigF11DA921": Object {
+      "DependsOn": Array [
+        "testrunnerASGamd64InstanceRoleDefaultPolicy878D6338",
+        "testrunnerASGamd64InstanceRole5BE4E643",
+      ],
+      "Properties": Object {
+        "IamInstanceProfile": Object {
+          "Ref": "testrunnerASGamd64InstanceProfile828F9683",
+        },
+        "ImageId": Object {
+          "Ref": "SsmParameterValueawsserviceecsoptimizedamiamazonlinux2recommendedimageidC96584B6F00A464EAD1953AFF4B05118Parameter",
+        },
+        "InstanceType": "c6i.large",
+        "KeyName": "your-key-name",
+        "SecurityGroups": Array [
+          Object {
+            "Fn::GetAtt": Array [
+              "testrunnertestrunnersgFD82329D",
+              "GroupId",
+            ],
+          },
+        ],
+        "SpotPrice": "0.107",
+        "UserData": Object {
+          "Fn::Base64": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "#!/bin/bash
+echo ECS_CLUSTER=",
+                Object {
+                  "Ref": "testrunner60D7B13B",
+                },
+                " >> /etc/ecs/ecs.config
+sudo iptables --insert FORWARD 1 --in-interface docker+ --destination 169.254.169.254/32 --jump DROP
+sudo service iptables save
+echo ECS_AWSVPC_BLOCK_IMDS=true >> /etc/ecs/ecs.config",
+              ],
+            ],
+          },
+        },
+      },
+      "Type": "AWS::AutoScaling::LaunchConfiguration",
+    },
+    "testrunnerASGarm64ASG1AC09258": Object {
+      "Properties": Object {
+        "AutoScalingGroupName": "test-runner-arm64",
+        "LaunchConfigurationName": Object {
+          "Ref": "testrunnerASGarm64LaunchConfigB2F470A4",
+        },
+        "MaxSize": "1",
+        "MinSize": "0",
+        "NewInstancesProtectedFromScaleIn": true,
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "PropagateAtLaunch": true,
+            "Value": "test-runner-stack/test-runner/ASG-arm64",
+          },
+        ],
+        "TerminationPolicies": Array [
+          "OldestInstance",
+          "Default",
+        ],
+        "VPCZoneIdentifier": Array [
+          Object {
+            "Fn::ImportValue": "test-vpc-stack:ExportsOutputReftestvpcPublicSubnet1Subnet01CF7554F3858355",
+          },
+          Object {
+            "Fn::ImportValue": "test-vpc-stack:ExportsOutputReftestvpcPublicSubnet2Subnet4E9D9728B25B3FFC",
+          },
+        ],
+      },
+      "Type": "AWS::AutoScaling::AutoScalingGroup",
+      "UpdatePolicy": Object {
+        "AutoScalingScheduledAction": Object {
+          "IgnoreUnmodifiedGroupSizeProperties": true,
+        },
+      },
+    },
+    "testrunnerASGarm64InstanceProfile8AD29D16": Object {
+      "Properties": Object {
+        "Roles": Array [
+          Object {
+            "Ref": "testrunnerASGarm64InstanceRole4B7031AE",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::InstanceProfile",
+    },
+    "testrunnerASGarm64InstanceRole4B7031AE": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "ec2.",
+                      Object {
+                        "Ref": "AWS::URLSuffix",
+                      },
+                    ],
+                  ],
+                },
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Tags": Array [
+          Object {
+            "Key": "Name",
+            "Value": "test-runner-stack/test-runner/ASG-arm64",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "testrunnerASGarm64InstanceRoleDefaultPolicy01D9960F": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "ecs:DeregisterContainerInstance",
+                "ecs:RegisterContainerInstance",
+                "ecs:Submit*",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::GetAtt": Array [
+                  "testrunner60D7B13B",
+                  "Arn",
+                ],
+              },
+            },
+            Object {
+              "Action": Array [
+                "ecs:Poll",
+                "ecs:StartTelemetrySession",
+              ],
+              "Condition": Object {
+                "ArnEquals": Object {
+                  "ecs:cluster": Object {
+                    "Fn::GetAtt": Array [
+                      "testrunner60D7B13B",
+                      "Arn",
+                    ],
+                  },
+                },
+              },
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            Object {
+              "Action": Array [
+                "ecs:DiscoverPollEndpoint",
+                "ecr:GetAuthorizationToken",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "testrunnerASGarm64InstanceRoleDefaultPolicy01D9960F",
+        "Roles": Array [
+          Object {
+            "Ref": "testrunnerASGarm64InstanceRole4B7031AE",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "testrunnerASGarm64LaunchConfigB2F470A4": Object {
+      "DependsOn": Array [
+        "testrunnerASGarm64InstanceRoleDefaultPolicy01D9960F",
+        "testrunnerASGarm64InstanceRole4B7031AE",
+      ],
+      "Properties": Object {
+        "IamInstanceProfile": Object {
+          "Ref": "testrunnerASGarm64InstanceProfile8AD29D16",
+        },
+        "ImageId": Object {
+          "Ref": "SsmParameterValueawsserviceecsoptimizedamiamazonlinux2arm64recommendedimageidC96584B6F00A464EAD1953AFF4B05118Parameter",
+        },
+        "InstanceType": "c6g.large",
+        "KeyName": "your-key-name",
+        "SecurityGroups": Array [
+          Object {
+            "Fn::GetAtt": Array [
+              "testrunnertestrunnersgFD82329D",
+              "GroupId",
+            ],
+          },
+        ],
+        "SpotPrice": "0.0856",
+        "UserData": Object {
+          "Fn::Base64": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "#!/bin/bash
+echo ECS_CLUSTER=",
+                Object {
+                  "Ref": "testrunner60D7B13B",
+                },
+                " >> /etc/ecs/ecs.config
+sudo iptables --insert FORWARD 1 --in-interface docker+ --destination 169.254.169.254/32 --jump DROP
+sudo service iptables save
+echo ECS_AWSVPC_BLOCK_IMDS=true >> /etc/ecs/ecs.config",
+              ],
+            ],
+          },
+        },
+      },
+      "Type": "AWS::AutoScaling::LaunchConfiguration",
+    },
+    "testrunnerAsgCapacityProvideramd647BF90295": Object {
+      "Properties": Object {
+        "AutoScalingGroupProvider": Object {
+          "AutoScalingGroupArn": Object {
+            "Ref": "testrunnerASGamd64ASG477C7D76",
+          },
+          "ManagedScaling": Object {
+            "Status": "ENABLED",
+            "TargetCapacity": 100,
+          },
+          "ManagedTerminationProtection": "ENABLED",
+        },
+        "Name": "amd64-test-runner-asg-cp",
+      },
+      "Type": "AWS::ECS::CapacityProvider",
+    },
+    "testrunnerAsgCapacityProviderarm6469ABD66E": Object {
+      "Properties": Object {
+        "AutoScalingGroupProvider": Object {
+          "AutoScalingGroupArn": Object {
+            "Ref": "testrunnerASGarm64ASG1AC09258",
+          },
+          "ManagedScaling": Object {
+            "Status": "ENABLED",
+            "TargetCapacity": 100,
+          },
+          "ManagedTerminationProtection": "ENABLED",
+        },
+        "Name": "arm64-test-runner-asg-cp",
+      },
+      "Type": "AWS::ECS::CapacityProvider",
+    },
+    "testrunnertestrunnerlgBD0B88CA": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "LogGroupName": "/ecs/test-runner",
+        "RetentionInDays": 7,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "testrunnertestrunnersgFD82329D": Object {
+      "Properties": Object {
+        "GroupDescription": "SG for test-runner",
+        "GroupName": "test-runner-sg",
+        "SecurityGroupEgress": Array [
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1",
+          },
+        ],
+        "SecurityGroupIngress": Array [
+          Object {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow SSH Access",
+            "FromPort": 22,
+            "IpProtocol": "tcp",
+            "ToPort": 22,
+          },
+        ],
+        "VpcId": Object {
+          "Fn::ImportValue": "test-vpc-stack:ExportsOutputReftestvpc8985080E5120E245",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "testrunnertestrunnertdB765244E": Object {
+      "Properties": Object {
+        "ContainerDefinitions": Array [
+          Object {
+            "Environment": Array [
+              Object {
+                "Name": "REPOSITORY_URL",
+                "Value": "https://github.com/your/reponame",
+              },
+              Object {
+                "Name": "TOKEN",
+                "Value": "your-self-hosted-runner-token",
+              },
+            ],
+            "Essential": true,
+            "Hostname": "test-runner",
+            "Image": "ghcr.io/heromo/ecs-github-actions-runner:latest",
+            "LogConfiguration": Object {
+              "LogDriver": "awslogs",
+              "Options": Object {
+                "awslogs-group": Object {
+                  "Ref": "testrunnertestrunnerlgBD0B88CA",
+                },
+                "awslogs-region": Object {
+                  "Ref": "AWS::Region",
+                },
+                "awslogs-stream-prefix": "github-actions-runner",
+              },
+            },
+            "Memory": 3500,
+            "MountPoints": Array [
+              Object {
+                "ContainerPath": "/var/run/docker.sock",
+                "ReadOnly": true,
+                "SourceVolume": "docker_sock",
+              },
+            ],
+            "Name": "github-actions-runner",
+          },
+        ],
+        "ExecutionRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "testrunnertestrunnertdExecutionRole3F9BFF07",
+            "Arn",
+          ],
+        },
+        "Family": "test-runner",
+        "NetworkMode": "bridge",
+        "RequiresCompatibilities": Array [
+          "EC2",
+        ],
+        "TaskRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "testrunnertestrunnertdTaskRoleBD7BD9E0",
+            "Arn",
+          ],
+        },
+        "Volumes": Array [
+          Object {
+            "Host": Object {
+              "SourcePath": "/var/run/docker.sock",
+            },
+            "Name": "docker_sock",
+          },
+        ],
+      },
+      "Type": "AWS::ECS::TaskDefinition",
+    },
+    "testrunnertestrunnertdExecutionRole3F9BFF07": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "testrunnertestrunnertdExecutionRoleDefaultPolicyB1B69C1E": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::GetAtt": Array [
+                  "testrunnertestrunnerlgBD0B88CA",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "testrunnertestrunnertdExecutionRoleDefaultPolicyB1B69C1E",
+        "Roles": Array [
+          Object {
+            "Ref": "testrunnertestrunnertdExecutionRole3F9BFF07",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "testrunnertestrunnertdTaskRoleBD7BD9E0": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+  },
+  "Rules": Object {
+    "CheckBootstrapVersion": Object {
+      "Assertions": Array [
+        Object {
+          "Assert": Object {
+            "Fn::Not": Array [
+              Object {
+                "Fn::Contains": Array [
+                  Array [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  Object {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;

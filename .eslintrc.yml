@@ -1,0 +1,40 @@
+env:
+  es6: true
+  node: true
+  jest/globals: true
+extends:
+  - airbnb-base
+  - plugin:import/errors
+  - plugin:import/warnings
+  - plugin:import/typescript
+globals:
+  Atomics: readonly
+  SharedArrayBuffer: readonly
+parser: '@typescript-eslint/parser'
+parserOptions:
+  ecmaVersion: 11
+  sourceType: module
+plugins:
+  - '@typescript-eslint'
+  - jest
+  - import
+ignorePatterns:
+  - 'cdk.out'
+  - '*.js'
+  - '*.d.ts'
+  - 'dist'
+rules:
+  "@typescript-eslint/no-unused-expressions": error
+  "@typescript-eslint/no-unused-vars": error
+  "@typescript-eslint/no-use-before-define": error
+  import/extensions: [error, ignorePackages, { ts: never, js: never }]
+  import/no-unresolved: error
+  import/prefer-default-export: off
+  lines-between-class-members: ["error", "always", { exceptAfterSingleLine: true }]
+  no-console: [error, { allow: [info, error] }]
+  no-new: off
+  no-shadow: off
+  no-unused-expressions: off
+  no-unused-vars: off
+  no-use-before-define: off
+  no-useless-constructor: off
