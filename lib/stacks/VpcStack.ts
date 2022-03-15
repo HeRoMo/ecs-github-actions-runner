@@ -10,7 +10,7 @@ import { Construct } from 'constructs';
 export class VpcStack extends Stack {
   public readonly vpc: Vpc;
   constructor(scope: Construct, vpcName: string, props?: StackProps | undefined) {
-    super(scope, `${vpcName}-stack`, props);
+    super(scope, `${vpcName}-stack`, props)
 
     const subnetConfiguration: SubnetConfiguration[] = [
       { name: 'Public', cidrMask: 24, subnetType: SubnetType.PUBLIC },
