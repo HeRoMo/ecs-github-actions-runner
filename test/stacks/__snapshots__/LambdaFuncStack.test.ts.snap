@@ -20,7 +20,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "558dc75fbdc793c8e2f64f85d2d7ed2cb820c727ec7e9b08666ad1af0103992e.zip",
+          "S3Key": "[HASH REMOVED]",
         },
         "Handler": "index.handler",
         "Role": Object {
@@ -170,7 +170,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "fa8a7e56e012f2afced01366fd13c0304453f0eb1f6d19d31edcb4a0c7a88736.zip",
+          "S3Key": "[HASH REMOVED]",
         },
         "Environment": Object {
           "Variables": Object {
@@ -228,7 +228,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "1c945796e4ec6878099d308988468d7ff6589f7ed3477955517f53dabea0b341.zip",
+          "S3Key": "[HASH REMOVED]",
         },
         "Environment": Object {
           "Variables": Object {
