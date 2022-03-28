@@ -481,7 +481,7 @@ echo ECS_AWSVPC_BLOCK_IMDS=true >> /etc/ecs/ecs.config",
               },
               Object {
                 "Name": "TOKEN",
-                "Value": "your-self-hosted-runner-token",
+                "Value": "set_self-hosted_runner_token",
               },
             ],
             "Essential": true,

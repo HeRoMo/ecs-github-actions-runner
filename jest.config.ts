@@ -9,6 +9,7 @@ const config: Config.InitialOptions = {
     '^.+\\.tsx?$': 'ts-jest',
   },
   setupFiles: ['<rootDir>/test/env.setup.ts'],
+  snapshotSerializers: ['<rootDir>/test/snapshot-plugin.ts'],
 };
 
 export default config;

@@ -14,8 +14,11 @@ const config: ConfigDefinition = {
       maxCapacity: 1,
     },
   },
-  repositoryUrl: 'your/repo',
-  token: 'your token',
+  repo: {
+    owner: 'your',
+    name: 'repo',
+  },
+  secretName: 'your-secret-name',
 };
 
 export default config;

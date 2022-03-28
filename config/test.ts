@@ -21,8 +21,11 @@ const config: Partial<ConfigDefinition> = {
       sshKey: 'your-key-name',
     },
   },
-  repositoryUrl: 'https://github.com/your/reponame',
-  token: 'your-self-hosted-runner-token',
+  repo: {
+    owner: 'your',
+    name: 'reponame',
+  },
+  secretName: 'test-secret-name',
 };
 
 export default config;
