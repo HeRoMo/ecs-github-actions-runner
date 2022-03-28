@@ -54,9 +54,21 @@ if you want to delete AWS resources of this CDK project, Run the following comma
 export NODE_CONFIG_ENV=<your-config-file-name(without extention)>
 yarn cdk destroy --all
 ```
----
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+## Start and stop Github actions runner tasks
+
+To start task, run the following command.
+
+```bash
+aws lambda invoke --function-name <clusterName>-funcs-start-runners /dev/null
+```
+
+To stop task, run the following command.
+
+```bash
+aws lambda invoke --function-name <clusterName>-funcs-stop-runners /dev/null
+```
+
 
 ## Useful commands
 
