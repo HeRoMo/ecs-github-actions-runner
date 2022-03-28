@@ -16,6 +16,16 @@ import { Construct } from 'constructs';
 import { CONFIG, NodeConfig } from '../Config';
 
 /**
+ * Information of Github actions runner cluster.
+ */
+export interface EcsGithubActionsRunnerInfo {
+  clusterName: string;
+  containerName: string;
+  taskDefFamily: string;
+  capacityProviders: string[];
+}
+
+/**
  * Constructer of ECS cluster for Github actions runner
  */
 export class EcsGithubActionsRunner extends Construct {
@@ -23,11 +33,34 @@ export class EcsGithubActionsRunner extends Construct {
    * ECS Cluster
    */
   public readonly cluster: Cluster;
+
   /**
    * Security Group of Cluster node
    */
-  public readonly securityGroup: SecurityGroup;
+  private readonly securityGroup: SecurityGroup;
 
+  /**
+   * Task definition family name
+   */
+  private readonly taskDefinitionFamily: string;
+
+  /**
+   * Container name of Github actions runnter.
+   */
+  private readonly runnerContainerName: string;
+
+  /**
+   * Capacity Provider names of Github actions runner cluster.
+   */
+  private readonly capacityProviders: string[] = [];
+
+  /**
+   * Constructor.
+   *
+   * @param scope Scope
+   * @param clusterName Cluster name
+   * @param vpc VPC instance
+   */
   constructor(
     scope: Construct,
     private readonly clusterName: string,
@@ -40,11 +73,29 @@ export class EcsGithubActionsRunner extends Construct {
       vpc: this.vpc,
     };
 
+    this.taskDefinitionFamily = this.clusterName;
+    this.runnerContainerName = 'github-actions-runner';
+
     this.cluster = new Cluster(this, this.clusterName, clusterProps);
     this.securityGroup = this.createSecurityGroup();
-    Object.entries(CONFIG.nodes).forEach(([key, node]) => this.addAsgCapacity(key, node));
+    Object.entries(CONFIG.nodes).forEach(([key, node]) => {
+      const provider = this.addAsgCapacity(key, node);
+      this.capacityProviders.push(provider.capacityProviderName);
+    });
 
     this.createTaskDefinition();
+  }
+
+  /**
+   * get Cluster infomation object.
+   */
+  public get clusterInfo(): EcsGithubActionsRunnerInfo {
+    return {
+      clusterName: this.clusterName,
+      containerName: this.runnerContainerName,
+      taskDefFamily: this.taskDefinitionFamily,
+      capacityProviders: this.capacityProviders,
+    };
   }
 
   /**
@@ -57,11 +108,11 @@ export class EcsGithubActionsRunner extends Construct {
     });
 
     const taskDefinition = new Ec2TaskDefinition(this, `${this.clusterName}-td`, {
-      family: `${this.clusterName}`,
+      family: this.taskDefinitionFamily,
     });
 
     const container = taskDefinition.addContainer('github-actions-runner', {
-      containerName: 'github-actions-runner',
+      containerName: this.runnerContainerName,
       memoryLimitMiB: CONFIG.memoryLimitMiB,
       hostname: this.clusterName,
       image: ContainerImage.fromRegistry('ghcr.io/heromo/ecs-github-actions-runner:latest'),
@@ -71,7 +122,7 @@ export class EcsGithubActionsRunner extends Construct {
       }),
       environment: {
         REPOSITORY_URL: CONFIG.repositoryUrl,
-        TOKEN: CONFIG.token,
+        TOKEN: 'set_self-hosted_runner_token',
       },
     });
 
@@ -88,6 +139,7 @@ export class EcsGithubActionsRunner extends Construct {
 
   /**
    * Create a security group for cluster node
+   *
    * @returns Security Group
    */
   private createSecurityGroup() {
@@ -105,7 +157,8 @@ export class EcsGithubActionsRunner extends Construct {
    * Add autoscaling group capacity
    *
    * @param nodeName cluster node name
-   * @param node node configuration
+   * @param node cluster node configuration
+   * @returns Autoscaling group capacity provider
    */
   private addAsgCapacity(nodeName: string, node: NodeConfig) {
     const autoScalingGroup = new AutoScalingGroup(this, `ASG-${nodeName}`, {
@@ -130,5 +183,6 @@ export class EcsGithubActionsRunner extends Construct {
       enableManagedScaling: true,
     });
     this.cluster.addAsgCapacityProvider(capacityProvider);
+    return capacityProvider;
   }
 }

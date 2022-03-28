@@ -4,3 +4,8 @@ cdk.out
 config/*
 !config/default.ts
 !config/test.ts
+
+tmp
+*.log
+.tool_versions
+.node_version
