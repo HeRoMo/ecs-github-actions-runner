@@ -1,7 +1,7 @@
 # https://hub.docker.com/_/debian
 FROM debian:bullseye-slim
 
-ARG RUNNER_VERSION=2.288.1
+ARG RUNNER_VERSION=2.289.1
 
 ARG USERNAME=user
 ARG GROUPNAME=user
