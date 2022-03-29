@@ -38,8 +38,8 @@ USER root
 RUN set -eux; \
     dpkgArch="$(dpkg --print-architecture)"; \
     case "${dpkgArch##*-}" in \
-        amd64) runnerArch='linux-x64'; runnerSha256='325b89bdc1c67264ec6f4515afda4534f14a6477d9ba241da19c43f9bed2f5a6' ;; \
-        arm64) runnerArch='linux-arm64'; runnerSha256='9fbb98fc64f57d48e86b641bd3dd54d870123afc32886b5ca1c33bdc10afb6ee' ;; \
+        amd64) runnerArch='linux-x64'; runnerSha256='d75a2b35c47df410bba1ede6196fc62b6063164f5d109bda1693641bba87a65f' ;; \
+        arm64) runnerArch='linux-arm64'; runnerSha256='28e09a31fe35863ef63507494642310eb7cbb9f2ae8c327cfce6962045a106f0' ;; \
         *) echo >&2 "unsupported architecture: ${dpkgArch}"; exit 1 ;; \
     esac; \
     url="https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-${runnerArch}-${RUNNER_VERSION}.tar.gz"; \
