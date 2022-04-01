@@ -19,7 +19,7 @@
     "@types/jest": "^27.4.1",
     "@types/node": "^16.11.26",
     "@types/source-map-support": "^0.5.4",
-    "@typescript-eslint/eslint-plugin": "^5.16.0",
+    "@typescript-eslint/eslint-plugin": "^5.17.0",
     "@typescript-eslint/parser": "^5.16.0",
     "aws-cdk": "^2.17.0",
     "esbuild": "^0.14.27",
