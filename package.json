@@ -20,7 +20,7 @@
     "@types/node": "^16.11.26",
     "@types/source-map-support": "^0.5.4",
     "@typescript-eslint/eslint-plugin": "^5.18.0",
-    "@typescript-eslint/parser": "^5.17.0",
+    "@typescript-eslint/parser": "^5.18.0",
     "aws-cdk": "^2.19.0",
     "esbuild": "^0.14.34",
     "eslint": "^8.12.0",
