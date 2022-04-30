@@ -1,7 +1,10 @@
 # https://hub.docker.com/_/debian
 FROM debian:bullseye-slim
 
-ARG RUNNER_VERSION=2.289.1
+# https://github.com/actions/runner/releases/latest
+ARG RUNNER_VERSION=2.291.1
+ARG SHA_AMD64='1bde3f2baf514adda5f8cf2ce531edd2f6be52ed84b9b6733bf43006d36dcd4c'
+ARG SHA_ARM64='c4823bd8322f80cb24a311ef49273f0677ff938530248242de7df33800a22900'
 
 ARG USERNAME=user
 ARG GROUPNAME=user
@@ -38,9 +41,9 @@ USER root
 RUN set -eux; \
     dpkgArch="$(dpkg --print-architecture)"; \
     case "${dpkgArch##*-}" in \
-        amd64) runnerArch='linux-x64'; runnerSha256='d75a2b35c47df410bba1ede6196fc62b6063164f5d109bda1693641bba87a65f' ;; \
-        arm64) runnerArch='linux-arm64'; runnerSha256='28e09a31fe35863ef63507494642310eb7cbb9f2ae8c327cfce6962045a106f0' ;; \
-        *) echo >&2 "unsupported architecture: ${dpkgArch}"; exit 1 ;; \
+      amd64) runnerArch='linux-x64'; runnerSha256=${SHA_AMD64} ;; \
+      arm64) runnerArch='linux-arm64'; runnerSha256=${SHA_ARM64} ;; \
+      *) echo >&2 "unsupported architecture: ${dpkgArch}"; exit 1 ;; \
     esac; \
     url="https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-${runnerArch}-${RUNNER_VERSION}.tar.gz"; \
     curl -L "$url" -o actions-runner.tar.gz; \
