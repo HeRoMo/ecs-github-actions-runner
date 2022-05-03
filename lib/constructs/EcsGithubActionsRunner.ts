@@ -29,6 +29,8 @@ export interface EcsGithubActionsRunnerInfo {
   ec2TaskDefFamily: string;
   ec2CapacityProviders: string[];
   fargateTaskDefFamilies: string[];
+  subnets: string[];
+  securityGroup: string;
 }
 
 /**
@@ -118,6 +120,8 @@ export class EcsGithubActionsRunner extends Construct {
       ec2TaskDefFamily: this.ec2TaskDefinitionFamily,
       ec2CapacityProviders: this.ec2CapacityProviders,
       fargateTaskDefFamilies: this.fargateTaskDefFamilies,
+      subnets: this.vpc.publicSubnets.map((subnet) => subnet.subnetId),
+      securityGroup: this.securityGroup.securityGroupId,
     };
   }
 

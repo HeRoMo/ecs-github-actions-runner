@@ -1,5 +1,5 @@
 import { SecretsManager } from '@aws-sdk/client-secrets-manager';
-import { ECS } from '@aws-sdk/client-ecs';
+import { ECS, RunTaskCommandInput } from '@aws-sdk/client-ecs';
 import { Octokit } from '@octokit/rest';
 
 /**
@@ -8,13 +8,16 @@ import { Octokit } from '@octokit/rest';
 export interface TaskOptions {
   clusterName: string;
   containerName: string;
-  taskDefFamily: string;
-  capacityProviders: string[];
+  ec2TaskDefFamily: string;
+  ec2CapacityProviders: string[];
+  fargateTaskDefFamilies: string[];
   secretId: string;
   repo: {
     owner: string;
     name: string;
   }
+  subnets: string[],
+  securityGroup: string;
 }
 
 /**
@@ -26,13 +29,16 @@ export function getTaskOpts(): TaskOptions {
   return {
     clusterName: process.env.CLUSTER_NAME,
     containerName: process.env.CLUSTER_NAME,
-    taskDefFamily: process.env.TASK_DEF_FAMILY,
-    capacityProviders: process.env.CAPACITY_PROVIDERS.split(','),
+    ec2TaskDefFamily: process.env.EC2_TASK_DEF_FAMILY,
+    ec2CapacityProviders: process.env.EC2_CAPACITY_PROVIDERS?.split(',') || [],
+    fargateTaskDefFamilies: process.env.FARGATE_TASK_DEF_FAMILIES?.split(',') || [],
     secretId: process.env.SECRET_NAME,
     repo: {
       owner: process.env.REPO_OWNER,
       name: process.env.REPO_NAME,
     },
+    subnets: process.env.SUBNETS?.split(',') || [],
+    securityGroup: process.env.SECURITY_GROUP,
   };
 }
 
@@ -57,15 +63,18 @@ export class TaskOperator {
 
   /**
    * Start Github runner tasks in the ECS cluster
+   *
+   * @param launchType  'ec2' or 'fargate'
    * @returns response of runTaks API.
    */
-  public async startTasks() {
-    const taskDefArn = await this.taskDefinition;
-    const runTasks = this.taskOpts.capacityProviders.map(
-      (capacityProvider) => this.runtask(capacityProvider, taskDefArn),
-    );
-    const outputs = await Promise.all(runTasks);
-    return outputs;
+  public async startTasks(launchType: 'ec2'|'fargate') {
+    if (launchType === 'ec2') {
+      return this.startEc2Tasks();
+    }
+    if (launchType === 'fargate') {
+      return this.startFargateTasks();
+    }
+    throw new Error('Invalid launchType');
   }
 
   /**
@@ -91,12 +100,47 @@ export class TaskOperator {
   }
 
   /**
+   * Start Github runner EC2 tasks in the ECS cluster
+   *
+   * @returns response of runTaks API.
+   */
+  private async startEc2Tasks() {
+    const taskDefArn = await this.ec2TaskDefinition;
+    const runTasks = this.taskOpts.ec2CapacityProviders.map(
+      (capacityProvider) => {
+        const inputGenerator = this.ec2RunTaskInput(capacityProvider, taskDefArn);
+        return this.runTask(inputGenerator);
+      },
+    );
+    const outputs = await Promise.all(runTasks);
+    return outputs;
+  }
+
+  /**
+   * Start Github runner fargate tasks in the ECS cluster
+   *
+   * @returns response of runTaks API.
+   */
+  private async startFargateTasks() {
+    const taskDefArns = await this.fargateTaskDefinitions;
+    const capacityProvider = 'FARGATE';
+    const runTasks = taskDefArns.map(
+      (taskDef) => {
+        const inputGenerator = this.fargateRuntTaskInput(capacityProvider, taskDef);
+        return this.runTask(inputGenerator);
+      },
+    );
+    const outputs = await Promise.all(runTasks);
+    return outputs;
+  }
+
+  /**
    * run a task of Github actions runner.
-   * @param capacityProvider Capacity Provider name.
-   * @param taskDefinition Task definition arn or name.
+   *
+   * @param inputGenerator function to generate RunTaskCommandInput
    * @returns response of runTask API
    */
-  private async runtask(capacityProvider: string, taskDefinition: string) {
+  private async runTask(inputGenerator: (token: string) => RunTaskCommandInput) {
     const token = await this.githubToken;
     const octkit = new Octokit({ auth: token });
     const { data: { token: regiToken } } = await octkit.rest.actions
@@ -105,7 +149,22 @@ export class TaskOperator {
         repo: this.taskOpts.repo.name,
       });
 
-    return this.ecs.runTask({
+    const input = inputGenerator(regiToken);
+    return this.ecs.runTask(input);
+  }
+
+  /**
+   * make function to generate RunTaskCommandInput for EC2
+   *
+   * @param capacityProvider Capacity Provider name.
+   * @param taskDefinition Task definition arn or name.
+   * @returns RunTaskCommandInput
+   */
+  private ec2RunTaskInput(
+    capacityProvider: string,
+    taskDefinition: string,
+  ): ((token: string) => RunTaskCommandInput) {
+    return (token: string) => ({
       taskDefinition,
       capacityProviderStrategy: [{
         capacityProvider,
@@ -115,21 +174,72 @@ export class TaskOperator {
       overrides: {
         containerOverrides: [{
           name: this.taskOpts.containerName,
-          environment: [{ name: 'TOKEN', value: regiToken }],
+          environment: [{ name: 'TOKEN', value: token }],
         }],
       },
     });
   }
 
   /**
-   * get task definition arn
+   * make function to generate RunTaskCommandInput for Fargate task
+   *
+   * @param capacityProvider Capacity Provider name.
+   * @param taskDefinition Task definition arn or name.
+   * @returns RunTaskCommandInput
+   */
+  private fargateRuntTaskInput(
+    capacityProvider: string,
+    taskDefinition: string,
+  ): ((token: string) => RunTaskCommandInput) {
+    return (token: string) => ({
+      taskDefinition,
+      capacityProviderStrategy: [{
+        capacityProvider,
+        weight: 0,
+        base: 1,
+      }],
+      cluster: this.taskOpts.clusterName,
+      count: 1,
+      overrides: {
+        containerOverrides: [{
+          name: this.taskOpts.containerName,
+          environment: [{ name: 'TOKEN', value: token }],
+        }],
+      },
+      networkConfiguration: {
+        awsvpcConfiguration: {
+          subnets: this.taskOpts.subnets,
+          securityGroups: [this.taskOpts.securityGroup],
+          assignPublicIp: 'ENABLED',
+        },
+      },
+      platformVersion: '1.4.0',
+    });
+  }
+
+  /**
+   * get EC2 task definition arn
    *
    * @returns Task definition arn
    */
-  private get taskDefinition(): Promise<string> {
+  private get ec2TaskDefinition(): Promise<string> {
+    return this.getTaskDefinition(this.taskOpts.ec2TaskDefFamily);
+  }
+
+  /**
+   * get fargate task definition arns
+   */
+  private get fargateTaskDefinitions(): Promise<string[]> {
+    const promises = this.taskOpts.fargateTaskDefFamilies.map((family) => (
+      this.getTaskDefinition(family)
+    ));
+    return Promise.all(promises);
+  }
+
+  private getTaskDefinition(familyPrefix: string): Promise<string> {
     return new Promise((resolve, reject) => {
       this.ecs.listTaskDefinitions({
-        familyPrefix: this.taskOpts.taskDefFamily,
+        familyPrefix,
         status: 'ACTIVE',
         sort: 'DESC',
         maxResults: 1,
@@ -137,7 +247,7 @@ export class TaskOperator {
         if (taskDefinitionArns && taskDefinitionArns.length >= 1) {
           resolve(taskDefinitionArns[0]);
         }
-        reject(new Error(`Taskdefinition[ ${this.taskOpts.taskDefFamily} ] was not found.`));
+        reject(new Error(`Taskdefinition[ ${familyPrefix} ] was not found.`));
       });
     });
   }

@@ -18,6 +18,8 @@ test('Snapshot Test', () => {
       'test-cluster-fg-arm64',
       'test-cluster-fg-x86_64',
     ],
+    subnets: ['subnet-11111111111111111', 'subnet-22222222222222222'],
+    securityGroup: 'sg-XXXXXXXXXXXXXXXXX',
   };
   const funcStack = new LambdaFuncStack(app, 'test-runner', info);
 

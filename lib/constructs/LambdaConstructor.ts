@@ -154,6 +154,8 @@ export class LambdaConstructor extends Construct {
         REPO_OWNER: CONFIG.repo.owner,
         REPO_NAME: CONFIG.repo.name,
         SECRET_NAME: CONFIG.secretName,
+        SUBNETS: this.taskInfo.subnets.join(','),
+        SECURITY_GROUP: this.taskInfo.securityGroup,
       },
     });
   }
