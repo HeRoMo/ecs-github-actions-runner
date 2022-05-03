@@ -26,7 +26,7 @@ export function getTaskOpts(): TaskOptions {
   return {
     clusterName: process.env.CLUSTER_NAME,
     containerName: process.env.CLUSTER_NAME,
-    taskDefFamily: process.env.CLUSTER_NAME,
+    taskDefFamily: process.env.TASK_DEF_FAMILY,
     capacityProviders: process.env.CAPACITY_PROVIDERS.split(','),
     secretId: process.env.SECRET_NAME,
     repo: {
@@ -65,7 +65,6 @@ export class TaskOperator {
       (capacityProvider) => this.runtask(capacityProvider, taskDefArn),
     );
     const outputs = await Promise.all(runTasks);
-    console.info(outputs);
     return outputs;
   }
 
@@ -86,7 +85,6 @@ export class TaskOperator {
       }));
 
       const outputs = await Promise.all(tasks);
-      console.info({ outputs });
       return outputs;
     }
     throw new Error('Failed to stop tasks');
@@ -139,7 +137,7 @@ export class TaskOperator {
         if (taskDefinitionArns && taskDefinitionArns.length >= 1) {
           resolve(taskDefinitionArns[0]);
         }
-        reject(new Error('Taskdefinition was not found.'));
+        reject(new Error(`Taskdefinition[ ${this.taskOpts.taskDefFamily} ] was not found.`));
       });
     });
   }
