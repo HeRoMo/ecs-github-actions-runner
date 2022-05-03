@@ -3,13 +3,19 @@ import {
   SubnetConfiguration, SubnetType, Vpc, VpcProps,
 } from 'aws-cdk-lib/aws-ec2';
 import { Construct } from 'constructs';
+import { CONFIG } from '../Config';
+
+const props: StackProps = {
+  env: { region: CONFIG.region },
+  description: `VPC for ${CONFIG.clusterName}`,
+};
 
 /**
  * Construct VPC stack
  */
 export class VpcStack extends Stack {
   public readonly vpc: Vpc;
-  constructor(scope: Construct, vpcName: string, props?: StackProps | undefined) {
+  constructor(scope: Construct, vpcName: string) {
     super(scope, `${vpcName}-stack`, props);
 
     const subnetConfiguration: SubnetConfiguration[] = [

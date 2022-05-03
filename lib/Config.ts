@@ -6,6 +6,10 @@ import * as config from 'config';
  */
 export interface ConfigDefinition {
   /**
+   * region to deploy
+   */
+  region?: string;
+  /**
    * Github Actions Runner ECS cluster name
    */
   clusterName: string;
@@ -14,9 +18,13 @@ export interface ConfigDefinition {
    */
   memoryLimitMiB: number;
   /**
-   * Cluster node configuration
+   * EC2 Cluster node configuration
    */
-  nodes: { [key: string]: NodeConfig };
+  ec2Nodes?: { [key: string]: Ec2NodeConfig };
+  /**
+   * Fargate configuration
+   */
+  fargate?: FargateConfig;
   /**
    * Repogitory configuration
    */
@@ -28,9 +36,9 @@ export interface ConfigDefinition {
 }
 
 /**
- * Configuration of the cluster node.
+ * Configuration of the EC2 cluster node.
  */
-export interface NodeConfig {
+export interface Ec2NodeConfig {
   /**
    * Type of EC2 instance of cluster node.
    */
@@ -58,6 +66,26 @@ export interface NodeConfig {
 }
 
 /**
+ * Fargate spec configuration
+ *
+ * @link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_ecs.FargateTaskDefinition.html#cpu
+ */
+export interface FargateConfig {
+  /**
+   * enable Fargate capacity provider;
+   */
+  enable: boolean;
+  /**
+   * The number of cpu units used by the task.
+   */
+  cpu: 256|512|1024|2048|4096;
+  /**
+   * The amount (in MiB) of memory used by the task.
+   */
+  memoryLimitMiB: 512|1024|2048|3072|4096|5120|6144|7168|8192|16384|30720;
+}
+
+/**
  * Configuration of Github repository
  */
 export interface RepoConfig {
@@ -76,6 +104,10 @@ export interface RepoConfig {
  */
 class Config implements ConfigDefinition {
   /**
+   * region to deploy
+   */
+  public readonly region: string;
+  /**
    * Github Actions Runner ECS cluster name
    */
   public readonly clusterName: string;
@@ -84,9 +116,13 @@ class Config implements ConfigDefinition {
    */
   public readonly memoryLimitMiB: number;
   /**
-   * Cluster node configuration
+   * EC2 Cluster node configuration
    */
-  public readonly nodes: { [key: string]: NodeConfig };
+  public readonly ec2Nodes: { [key: string]: Ec2NodeConfig };
+  /**
+   * Fargate configuration
+   */
+  public readonly fargate: FargateConfig;
   /**
    * Repogitory configuration
    */
@@ -97,9 +133,11 @@ class Config implements ConfigDefinition {
   public readonly secretName: string;
 
   constructor() {
+    this.region = config.get<string>('region');
     this.clusterName = config.get<string>('clusterName');
     this.memoryLimitMiB = config.get<number>('memoryLimitMiB');
-    this.nodes = config.get<{ [key: string]: NodeConfig }>('nodes');
+    this.ec2Nodes = config.get<{ [key: string]: Ec2NodeConfig }>('ec2Nodes');
+    this.fargate = config.get<FargateConfig>('fargate');
     this.repo = config.get<RepoConfig>('repo');
     this.secretName = config.get<string>('secretName');
   }

@@ -2,6 +2,7 @@
 
 exports[`Snapshot Test 1`] = `
 Object {
+  "Description": "VPC for github-actions-runner",
   "Parameters": Object {
     "BootstrapVersion": Object {
       "Default": "/cdk-bootstrap/hnb659fds/version",

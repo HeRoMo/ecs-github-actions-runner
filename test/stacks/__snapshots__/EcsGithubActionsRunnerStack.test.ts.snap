@@ -2,6 +2,7 @@
 
 exports[`Snapshot Test 1`] = `
 Object {
+  "Description": "github-actions-runner, ECS cluster for Github self-hosted runner",
   "Parameters": Object {
     "BootstrapVersion": Object {
       "Default": "/cdk-bootstrap/hnb659fds/version",
@@ -21,6 +22,8 @@ Object {
     "testrunner3196B9C4": Object {
       "Properties": Object {
         "CapacityProviders": Array [
+          "FARGATE",
+          "FARGATE_SPOT",
           Object {
             "Ref": "testrunnerAsgCapacityProvideramd647BF90295",
           },
@@ -95,17 +98,7 @@ Object {
               "Action": "sts:AssumeRole",
               "Effect": "Allow",
               "Principal": Object {
-                "Service": Object {
-                  "Fn::Join": Array [
-                    "",
-                    Array [
-                      "ec2.",
-                      Object {
-                        "Ref": "AWS::URLSuffix",
-                      },
-                    ],
-                  ],
-                },
+                "Service": "ec2.amazonaws.com",
               },
             },
           ],
@@ -276,17 +269,7 @@ echo ECS_AWSVPC_BLOCK_IMDS=true >> /etc/ecs/ecs.config",
               "Action": "sts:AssumeRole",
               "Effect": "Allow",
               "Principal": Object {
-                "Service": Object {
-                  "Fn::Join": Array [
-                    "",
-                    Array [
-                      "ec2.",
-                      Object {
-                        "Ref": "AWS::URLSuffix",
-                      },
-                    ],
-                  ],
-                },
+                "Service": "ec2.amazonaws.com",
               },
             },
           ],
@@ -470,7 +453,7 @@ echo ECS_AWSVPC_BLOCK_IMDS=true >> /etc/ecs/ecs.config",
       },
       "Type": "AWS::EC2::SecurityGroup",
     },
-    "testrunnertestrunnertdB765244E": Object {
+    "testrunnertestrunnertdec279C141CD": Object {
       "Properties": Object {
         "ContainerDefinitions": Array [
           Object {
@@ -485,7 +468,6 @@ echo ECS_AWSVPC_BLOCK_IMDS=true >> /etc/ecs/ecs.config",
               },
             ],
             "Essential": true,
-            "Hostname": "test-runner",
             "Image": "ghcr.io/heromo/ecs-github-actions-runner:latest",
             "LogConfiguration": Object {
               "LogDriver": "awslogs",
@@ -493,9 +475,7 @@ echo ECS_AWSVPC_BLOCK_IMDS=true >> /etc/ecs/ecs.config",
                 "awslogs-group": Object {
                   "Ref": "testrunnertestrunnerlgBD0B88CA",
                 },
-                "awslogs-region": Object {
-                  "Ref": "AWS::Region",
-                },
+                "awslogs-region": "us-east-1",
                 "awslogs-stream-prefix": "github-actions-runner",
               },
             },
@@ -512,18 +492,18 @@ echo ECS_AWSVPC_BLOCK_IMDS=true >> /etc/ecs/ecs.config",
         ],
         "ExecutionRoleArn": Object {
           "Fn::GetAtt": Array [
-            "testrunnertestrunnertdExecutionRole3F9BFF07",
+            "testrunnertestrunnertdec2ExecutionRoleE89C3F52",
             "Arn",
           ],
         },
-        "Family": "test-runner",
+        "Family": "test-runner-ec2",
         "NetworkMode": "bridge",
         "RequiresCompatibilities": Array [
           "EC2",
         ],
         "TaskRoleArn": Object {
           "Fn::GetAtt": Array [
-            "testrunnertestrunnertdTaskRoleBD7BD9E0",
+            "testrunnertestrunnertdec2TaskRole080BB98E",
             "Arn",
           ],
         },
@@ -538,24 +518,7 @@ echo ECS_AWSVPC_BLOCK_IMDS=true >> /etc/ecs/ecs.config",
       },
       "Type": "AWS::ECS::TaskDefinition",
     },
-    "testrunnertestrunnertdExecutionRole3F9BFF07": Object {
-      "Properties": Object {
-        "AssumeRolePolicyDocument": Object {
-          "Statement": Array [
-            Object {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": Object {
-                "Service": "ecs-tasks.amazonaws.com",
-              },
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-      },
-      "Type": "AWS::IAM::Role",
-    },
-    "testrunnertestrunnertdExecutionRoleDefaultPolicyB1B69C1E": Object {
+    "testrunnertestrunnertdec2ExecutionRoleDefaultPolicy52E588AD": Object {
       "Properties": Object {
         "PolicyDocument": Object {
           "Statement": Array [
@@ -575,16 +538,271 @@ echo ECS_AWSVPC_BLOCK_IMDS=true >> /etc/ecs/ecs.config",
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "testrunnertestrunnertdExecutionRoleDefaultPolicyB1B69C1E",
+        "PolicyName": "testrunnertestrunnertdec2ExecutionRoleDefaultPolicy52E588AD",
         "Roles": Array [
           Object {
-            "Ref": "testrunnertestrunnertdExecutionRole3F9BFF07",
+            "Ref": "testrunnertestrunnertdec2ExecutionRoleE89C3F52",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
     },
-    "testrunnertestrunnertdTaskRoleBD7BD9E0": Object {
+    "testrunnertestrunnertdec2ExecutionRoleE89C3F52": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "testrunnertestrunnertdec2TaskRole080BB98E": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "testrunnertestrunnertdfgarm648BFB5B4E": Object {
+      "Properties": Object {
+        "ContainerDefinitions": Array [
+          Object {
+            "Environment": Array [
+              Object {
+                "Name": "REPOSITORY_URL",
+                "Value": "https://github.com/your/reponame",
+              },
+              Object {
+                "Name": "TOKEN",
+                "Value": "set_self-hosted_runner_token",
+              },
+            ],
+            "Essential": true,
+            "Image": "ghcr.io/heromo/ecs-github-actions-runner:latest",
+            "LogConfiguration": Object {
+              "LogDriver": "awslogs",
+              "Options": Object {
+                "awslogs-group": Object {
+                  "Ref": "testrunnertestrunnerlgBD0B88CA",
+                },
+                "awslogs-region": "us-east-1",
+                "awslogs-stream-prefix": "github-actions-runner",
+              },
+            },
+            "Memory": 3500,
+            "Name": "github-actions-runner",
+          },
+        ],
+        "Cpu": "512",
+        "ExecutionRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "testrunnertestrunnertdfgarm64ExecutionRoleCD2346EA",
+            "Arn",
+          ],
+        },
+        "Family": "test-runner-fg-arm64",
+        "Memory": "1024",
+        "NetworkMode": "awsvpc",
+        "RequiresCompatibilities": Array [
+          "FARGATE",
+        ],
+        "RuntimePlatform": Object {
+          "CpuArchitecture": "ARM64",
+          "OperatingSystemFamily": "LINUX",
+        },
+        "TaskRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "testrunnertestrunnertdfgarm64TaskRoleABE70156",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ECS::TaskDefinition",
+    },
+    "testrunnertestrunnertdfgarm64ExecutionRoleCD2346EA": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "testrunnertestrunnertdfgarm64ExecutionRoleDefaultPolicy5FA2A402": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::GetAtt": Array [
+                  "testrunnertestrunnerlgBD0B88CA",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "testrunnertestrunnertdfgarm64ExecutionRoleDefaultPolicy5FA2A402",
+        "Roles": Array [
+          Object {
+            "Ref": "testrunnertestrunnertdfgarm64ExecutionRoleCD2346EA",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "testrunnertestrunnertdfgarm64TaskRoleABE70156": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "testrunnertestrunnertdfgx86647A3571A7": Object {
+      "Properties": Object {
+        "ContainerDefinitions": Array [
+          Object {
+            "Environment": Array [
+              Object {
+                "Name": "REPOSITORY_URL",
+                "Value": "https://github.com/your/reponame",
+              },
+              Object {
+                "Name": "TOKEN",
+                "Value": "set_self-hosted_runner_token",
+              },
+            ],
+            "Essential": true,
+            "Image": "ghcr.io/heromo/ecs-github-actions-runner:latest",
+            "LogConfiguration": Object {
+              "LogDriver": "awslogs",
+              "Options": Object {
+                "awslogs-group": Object {
+                  "Ref": "testrunnertestrunnerlgBD0B88CA",
+                },
+                "awslogs-region": "us-east-1",
+                "awslogs-stream-prefix": "github-actions-runner",
+              },
+            },
+            "Memory": 3500,
+            "Name": "github-actions-runner",
+          },
+        ],
+        "Cpu": "512",
+        "ExecutionRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "testrunnertestrunnertdfgx8664ExecutionRoleC2D3A897",
+            "Arn",
+          ],
+        },
+        "Family": "test-runner-fg-x86_64",
+        "Memory": "1024",
+        "NetworkMode": "awsvpc",
+        "RequiresCompatibilities": Array [
+          "FARGATE",
+        ],
+        "RuntimePlatform": Object {
+          "CpuArchitecture": "X86_64",
+          "OperatingSystemFamily": "LINUX",
+        },
+        "TaskRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "testrunnertestrunnertdfgx8664TaskRoleAC6A46D8",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ECS::TaskDefinition",
+    },
+    "testrunnertestrunnertdfgx8664ExecutionRoleC2D3A897": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ecs-tasks.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "testrunnertestrunnertdfgx8664ExecutionRoleDefaultPolicy4754446E": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::GetAtt": Array [
+                  "testrunnertestrunnerlgBD0B88CA",
+                  "Arn",
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "testrunnertestrunnertdfgx8664ExecutionRoleDefaultPolicy4754446E",
+        "Roles": Array [
+          Object {
+            "Ref": "testrunnertestrunnertdfgx8664ExecutionRoleC2D3A897",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "testrunnertestrunnertdfgx8664TaskRoleAC6A46D8": Object {
       "Properties": Object {
         "AssumeRolePolicyDocument": Object {
           "Statement": Array [

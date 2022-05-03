@@ -2,6 +2,7 @@
 
 exports[`Snapshot Test 1`] = `
 Object {
+  "Description": "Lambda functions to operate Tasks of github-actions-runner",
   "Parameters": Object {
     "BootstrapVersion": Object {
       "Default": "/cdk-bootstrap/hnb659fds/version",
@@ -18,7 +19,7 @@ Object {
       "Properties": Object {
         "Code": Object {
           "S3Bucket": Object {
-            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-us-east-1",
           },
           "S3Key": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.zip",
         },
@@ -137,14 +138,16 @@ Object {
                   ],
                   "Effect": "Allow",
                   "Resource": Array [
-                    "arn:aws:ecs:*:*:task-definition/test-cluster:*",
-                    "arn:aws:ecs:*:*:task/test-cluster/*",
+                    "arn:aws:ecs:us-east-1:*:task/test-cluster/*",
+                    "arn:aws:ecs:us-east-1:*:task-definition/test-cluster-ec2:*",
+                    "arn:aws:ecs:us-east-1:*:task-definition/test-cluster-fg-arm64:*",
+                    "arn:aws:ecs:us-east-1:*:task-definition/test-cluster-fg-x86_64:*",
                   ],
                 },
                 Object {
                   "Action": "secretsmanager:GetSecretValue",
                   "Effect": "Allow",
-                  "Resource": "arn:aws:secretsmanager:*:*:secret:*",
+                  "Resource": "arn:aws:secretsmanager:us-east-1:*:secret:*",
                 },
                 Object {
                   "Action": "iam:PassRole",
@@ -168,20 +171,21 @@ Object {
       "Properties": Object {
         "Code": Object {
           "S3Bucket": Object {
-            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-us-east-1",
           },
           "S3Key": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.zip",
         },
         "Environment": Object {
           "Variables": Object {
             "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
-            "CAPACITY_PROVIDERS": "amd64-cap-provider,arm64-cap-provider",
             "CLUSTER_NAME": "test-cluster",
             "CONTAINER_NAME": "github-actions-runner",
+            "EC2_CAPACITY_PROVIDERS": "amd64-cap-provider,arm64-cap-provider",
+            "EC2_TASK_DEF_FAMILY": "test-cluster-ec2",
+            "FARGATE_TASK_DEF_FAMILIES": "test-cluster-fg-arm64,test-cluster-fg-x86_64",
             "REPO_NAME": "reponame",
             "REPO_OWNER": "your",
             "SECRET_NAME": "test-secret-name",
-            "TASK_DEF_FAMILY": "test-cluster",
           },
         },
         "FunctionName": "test-runner-start-runners",
@@ -226,20 +230,21 @@ Object {
       "Properties": Object {
         "Code": Object {
           "S3Bucket": Object {
-            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-us-east-1",
           },
           "S3Key": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.zip",
         },
         "Environment": Object {
           "Variables": Object {
             "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
-            "CAPACITY_PROVIDERS": "amd64-cap-provider,arm64-cap-provider",
             "CLUSTER_NAME": "test-cluster",
             "CONTAINER_NAME": "github-actions-runner",
+            "EC2_CAPACITY_PROVIDERS": "amd64-cap-provider,arm64-cap-provider",
+            "EC2_TASK_DEF_FAMILY": "test-cluster-ec2",
+            "FARGATE_TASK_DEF_FAMILIES": "test-cluster-fg-arm64,test-cluster-fg-x86_64",
             "REPO_NAME": "reponame",
             "REPO_OWNER": "your",
             "SECRET_NAME": "test-secret-name",
-            "TASK_DEF_FAMILY": "test-cluster",
           },
         },
         "FunctionName": "test-runner-stop-runners",

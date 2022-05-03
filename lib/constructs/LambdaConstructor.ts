@@ -58,7 +58,7 @@ export class LambdaConstructor extends Construct {
    * @returns Role.
    */
   private createFunctionRole(
-    region: string = process.env.CDK_DEFAULT_REGION || '*',
+    region: string = CONFIG.region || '*',
     account: string = process.env.CDK_DEFAULT_ACCOUNT || '*',
   ) {
     const path = `/${this.id}/`;
@@ -91,8 +91,11 @@ export class LambdaConstructor extends Construct {
                 'ecs:stopTask',
               ],
               resources: [
-                `arn:aws:ecs:${region}:${account}:task-definition/${this.taskInfo.taskDefFamily}:*`,
                 `arn:aws:ecs:${region}:${account}:task/${this.taskInfo.clusterName}/*`,
+                `arn:aws:ecs:${region}:${account}:task-definition/${this.taskInfo.ec2TaskDefFamily}:*`,
+                ...this.taskInfo.fargateTaskDefFamilies.map((family) => (
+                  `arn:aws:ecs:${region}:${account}:task-definition/${family}:*`
+                )),
               ],
             }),
             new PolicyStatement({
@@ -145,8 +148,9 @@ export class LambdaConstructor extends Construct {
       environment: {
         CLUSTER_NAME: this.taskInfo.clusterName,
         CONTAINER_NAME: this.taskInfo.containerName,
-        TASK_DEF_FAMILY: this.taskInfo.taskDefFamily,
-        CAPACITY_PROVIDERS: this.taskInfo.capacityProviders.join(','),
+        EC2_TASK_DEF_FAMILY: `${this.taskInfo.ec2TaskDefFamily}`,
+        EC2_CAPACITY_PROVIDERS: this.taskInfo.ec2CapacityProviders.join(','),
+        FARGATE_TASK_DEF_FAMILIES: this.taskInfo.fargateTaskDefFamilies.join(','),
         REPO_OWNER: CONFIG.repo.owner,
         REPO_NAME: CONFIG.repo.name,
         SECRET_NAME: CONFIG.secretName,

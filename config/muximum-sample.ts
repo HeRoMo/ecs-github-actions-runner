@@ -3,16 +3,17 @@ import { AmiHardwareType, EcsOptimizedImage } from 'aws-cdk-lib/aws-ecs';
 import { ConfigDefinition } from '../lib/Config';
 
 const config: ConfigDefinition = {
-  region: process.env.CDK_DEFAULT_REGION,
-  clusterName: 'github-actions-runner',
+  region: 'ap-northeast-1',
+  clusterName: 'your-cluster-name',
   memoryLimitMiB: 3500,
   ec2Nodes: {
     amd64: {
-      instanceType: InstanceType.of(InstanceClass.C5, InstanceSize.LARGE),
+      instanceType: InstanceType.of(InstanceClass.C6I, InstanceSize.LARGE),
       machineImage: EcsOptimizedImage.amazonLinux2(),
       spotPrice: '0.107',
       minCapacity: 0,
       maxCapacity: 1,
+      sshKey: 'your-key-name',
     },
     arm64: {
       instanceType: InstanceType.of(InstanceClass.C6G, InstanceSize.LARGE),
@@ -20,6 +21,7 @@ const config: ConfigDefinition = {
       spotPrice: '0.0856',
       minCapacity: 0,
       maxCapacity: 1,
+      sshKey: 'your-key-name',
     },
   },
   fargate: {
@@ -28,8 +30,8 @@ const config: ConfigDefinition = {
     memoryLimitMiB: 2048,
   },
   repo: {
-    owner: 'your',
-    name: 'repo',
+    owner: 'owner',
+    name: 'repo-name',
   },
   secretName: 'your-secret-name',
 };

@@ -9,10 +9,14 @@ test('Snapshot Test', () => {
   const info: EcsGithubActionsRunnerInfo = {
     clusterName: 'test-cluster',
     containerName: 'github-actions-runner',
-    taskDefFamily: 'test-cluster',
-    capacityProviders: [
+    ec2TaskDefFamily: 'test-cluster-ec2',
+    ec2CapacityProviders: [
       'amd64-cap-provider',
       'arm64-cap-provider',
+    ],
+    fargateTaskDefFamilies: [
+      'test-cluster-fg-arm64',
+      'test-cluster-fg-x86_64',
     ],
   };
   const funcStack = new LambdaFuncStack(app, 'test-runner', info);

@@ -3,7 +3,8 @@ import { AmiHardwareType, EcsOptimizedImage } from 'aws-cdk-lib/aws-ecs';
 import { ConfigDefinition } from '../lib/Config';
 
 const config: Partial<ConfigDefinition> = {
-  nodes: {
+  region: 'us-east-1',
+  ec2Nodes: {
     amd64: {
       instanceType: InstanceType.of(InstanceClass.C6I, InstanceSize.LARGE),
       machineImage: EcsOptimizedImage.amazonLinux2(),
@@ -20,6 +21,11 @@ const config: Partial<ConfigDefinition> = {
       maxCapacity: 1,
       sshKey: 'your-key-name',
     },
+  },
+  fargate: {
+    enable: true,
+    cpu: 512,
+    memoryLimitMiB: 1024,
   },
   repo: {
     owner: 'your',
