@@ -7,7 +7,6 @@ import { LambdaFuncStack } from '../../lib/stacks/LambdaFuncStack';
 test('Snapshot Test', () => {
   const app = new cdk.App();
   const info: EcsGithubActionsRunnerInfo = {
-    clusterName: 'test-cluster',
     containerName: 'github-actions-runner',
     ec2TaskDefFamily: 'test-cluster-ec2',
     ec2CapacityProviders: [

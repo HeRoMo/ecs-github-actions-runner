@@ -2,7 +2,7 @@
 
 exports[`Snapshot Test 1`] = `
 Object {
-  "Description": "github-actions-runner, ECS cluster for Github self-hosted runner",
+  "Description": "test-cluster, ECS cluster for Github self-hosted runner",
   "Parameters": Object {
     "BootstrapVersion": Object {
       "Default": "/cdk-bootstrap/hnb659fds/version",

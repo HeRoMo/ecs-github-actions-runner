@@ -66,13 +66,17 @@ yarn cdk destroy --all
 To start task, run the following command.
 
 ```bash
-aws lambda invoke --function-name <clusterName>-funcs-start-runners /dev/null
+# for start EC2 runners
+aws lambda invoke --function-name <clusterName>-start-runners-ec2 /dev/null
+
+# for start Fargate runners
+aws lambda invoke --function-name <clusterName>-start-runners-fargate /dev/null
 ```
 
 To stop task, run the following command.
 
 ```bash
-aws lambda invoke --function-name <clusterName>-funcs-stop-runners /dev/null
+aws lambda invoke --function-name <clusterName>-stop-runners /dev/null
 ```
 
 

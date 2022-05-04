@@ -38,14 +38,26 @@ export class LambdaConstructor extends Construct {
 
     const role = this.createFunctionRole();
 
-    this.startRunnerFunc = this.createFunction(
-      `${this.id}-start-runners`,
-      'lambda/handlers/startRunners.ts',
-      'handler',
-      role,
-    );
+    if (Object.keys(CONFIG.ec2Nodes).length > 0) {
+      this.startRunnerFunc = this.createFunction(
+        `${CONFIG.clusterName}-start-runners-ec2`,
+        'lambda/handlers/startRunners.ts',
+        'ec2Handler',
+        role,
+      );
+    }
+
+    if (CONFIG.fargate.enable) {
+      this.startRunnerFunc = this.createFunction(
+        `${CONFIG.clusterName}-start-runners-fargate`,
+        'lambda/handlers/startRunners.ts',
+        'fargateHandler',
+        role,
+      );
+    }
+
     this.stopRunnerFunc = this.createFunction(
-      `${this.id}-stop-runners`,
+      `${CONFIG.clusterName}-stop-runners`,
       'lambda/handlers/stopRunners.ts',
       'handler',
       role,
@@ -91,7 +103,7 @@ export class LambdaConstructor extends Construct {
                 'ecs:stopTask',
               ],
               resources: [
-                `arn:aws:ecs:${region}:${account}:task/${this.taskInfo.clusterName}/*`,
+                `arn:aws:ecs:${region}:${account}:task/${CONFIG.clusterName}/*`,
                 `arn:aws:ecs:${region}:${account}:task-definition/${this.taskInfo.ec2TaskDefFamily}:*`,
                 ...this.taskInfo.fargateTaskDefFamilies.map((family) => (
                   `arn:aws:ecs:${region}:${account}:task-definition/${family}:*`
@@ -146,7 +158,7 @@ export class LambdaConstructor extends Construct {
       },
       logRetention: RetentionDays.ONE_WEEK,
       environment: {
-        CLUSTER_NAME: this.taskInfo.clusterName,
+        CLUSTER_NAME: CONFIG.clusterName,
         CONTAINER_NAME: this.taskInfo.containerName,
         EC2_TASK_DEF_FAMILY: `${this.taskInfo.ec2TaskDefFamily}`,
         EC2_CAPACITY_PROVIDERS: this.taskInfo.ec2CapacityProviders.join(','),

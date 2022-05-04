@@ -4,6 +4,7 @@ import { ConfigDefinition } from '../lib/Config';
 
 const config: Partial<ConfigDefinition> = {
   region: 'us-east-1',
+  clusterName: 'test-cluster',
   ec2Nodes: {
     amd64: {
       instanceType: InstanceType.of(InstanceClass.C6I, InstanceSize.LARGE),

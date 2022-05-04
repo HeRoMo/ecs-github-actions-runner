@@ -24,7 +24,6 @@ const GITHUB_RUNNER_IMAGE = 'ghcr.io/heromo/ecs-github-actions-runner:latest';
  * Information of Github actions runner cluster.
  */
 export interface EcsGithubActionsRunnerInfo {
-  clusterName: string;
   containerName: string;
   ec2TaskDefFamily: string;
   ec2CapacityProviders: string[];
@@ -115,7 +114,6 @@ export class EcsGithubActionsRunner extends Construct {
    */
   public get clusterInfo(): EcsGithubActionsRunnerInfo {
     return {
-      clusterName: this.clusterName,
       containerName: this.runnerContainerName,
       ec2TaskDefFamily: this.ec2TaskDefinitionFamily,
       ec2CapacityProviders: this.ec2CapacityProviders,

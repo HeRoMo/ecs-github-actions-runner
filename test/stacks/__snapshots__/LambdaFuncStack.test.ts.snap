@@ -2,7 +2,7 @@
 
 exports[`Snapshot Test 1`] = `
 Object {
-  "Description": "Lambda functions to operate Tasks of github-actions-runner",
+  "Description": "Lambda functions to operate Tasks of test-cluster",
   "Parameters": Object {
     "BootstrapVersion": Object {
       "Default": "/cdk-bootstrap/hnb659fds/version",
@@ -89,6 +89,189 @@ Object {
       },
       "Type": "AWS::IAM::Policy",
     },
+    "testrunnertestclusterstartrunnersec204C3B8B9": Object {
+      "DependsOn": Array [
+        "testrunnertestrunnerrole26678EE0",
+      ],
+      "Properties": Object {
+        "Code": Object {
+          "S3Bucket": Object {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-us-east-1",
+          },
+          "S3Key": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.zip",
+        },
+        "Environment": Object {
+          "Variables": Object {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+            "CLUSTER_NAME": "test-cluster",
+            "CONTAINER_NAME": "github-actions-runner",
+            "EC2_CAPACITY_PROVIDERS": "amd64-cap-provider,arm64-cap-provider",
+            "EC2_TASK_DEF_FAMILY": "test-cluster-ec2",
+            "FARGATE_TASK_DEF_FAMILIES": "test-cluster-fg-arm64,test-cluster-fg-x86_64",
+            "REPO_NAME": "reponame",
+            "REPO_OWNER": "your",
+            "SECRET_NAME": "test-secret-name",
+            "SECURITY_GROUP": "sg-XXXXXXXXXXXXXXXXX",
+            "SUBNETS": "subnet-11111111111111111,subnet-22222222222222222",
+          },
+        },
+        "FunctionName": "test-cluster-start-runners-ec2",
+        "Handler": "index.ec2Handler",
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "testrunnertestrunnerrole26678EE0",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs14.x",
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "testrunnertestclusterstartrunnersec2LogRetentionD95CC791": Object {
+      "Properties": Object {
+        "LogGroupName": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "/aws/lambda/",
+              Object {
+                "Ref": "testrunnertestclusterstartrunnersec204C3B8B9",
+              },
+            ],
+          ],
+        },
+        "RetentionInDays": 7,
+        "ServiceToken": Object {
+          "Fn::GetAtt": Array [
+            "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::LogRetention",
+    },
+    "testrunnertestclusterstartrunnersfargateDE56FBAE": Object {
+      "DependsOn": Array [
+        "testrunnertestrunnerrole26678EE0",
+      ],
+      "Properties": Object {
+        "Code": Object {
+          "S3Bucket": Object {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-us-east-1",
+          },
+          "S3Key": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.zip",
+        },
+        "Environment": Object {
+          "Variables": Object {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+            "CLUSTER_NAME": "test-cluster",
+            "CONTAINER_NAME": "github-actions-runner",
+            "EC2_CAPACITY_PROVIDERS": "amd64-cap-provider,arm64-cap-provider",
+            "EC2_TASK_DEF_FAMILY": "test-cluster-ec2",
+            "FARGATE_TASK_DEF_FAMILIES": "test-cluster-fg-arm64,test-cluster-fg-x86_64",
+            "REPO_NAME": "reponame",
+            "REPO_OWNER": "your",
+            "SECRET_NAME": "test-secret-name",
+            "SECURITY_GROUP": "sg-XXXXXXXXXXXXXXXXX",
+            "SUBNETS": "subnet-11111111111111111,subnet-22222222222222222",
+          },
+        },
+        "FunctionName": "test-cluster-start-runners-fargate",
+        "Handler": "index.fargateHandler",
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "testrunnertestrunnerrole26678EE0",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs14.x",
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "testrunnertestclusterstartrunnersfargateLogRetentionBD39DC4E": Object {
+      "Properties": Object {
+        "LogGroupName": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "/aws/lambda/",
+              Object {
+                "Ref": "testrunnertestclusterstartrunnersfargateDE56FBAE",
+              },
+            ],
+          ],
+        },
+        "RetentionInDays": 7,
+        "ServiceToken": Object {
+          "Fn::GetAtt": Array [
+            "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::LogRetention",
+    },
+    "testrunnertestclusterstoprunners0DD77B77": Object {
+      "DependsOn": Array [
+        "testrunnertestrunnerrole26678EE0",
+      ],
+      "Properties": Object {
+        "Code": Object {
+          "S3Bucket": Object {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-us-east-1",
+          },
+          "S3Key": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.zip",
+        },
+        "Environment": Object {
+          "Variables": Object {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+            "CLUSTER_NAME": "test-cluster",
+            "CONTAINER_NAME": "github-actions-runner",
+            "EC2_CAPACITY_PROVIDERS": "amd64-cap-provider,arm64-cap-provider",
+            "EC2_TASK_DEF_FAMILY": "test-cluster-ec2",
+            "FARGATE_TASK_DEF_FAMILIES": "test-cluster-fg-arm64,test-cluster-fg-x86_64",
+            "REPO_NAME": "reponame",
+            "REPO_OWNER": "your",
+            "SECRET_NAME": "test-secret-name",
+            "SECURITY_GROUP": "sg-XXXXXXXXXXXXXXXXX",
+            "SUBNETS": "subnet-11111111111111111,subnet-22222222222222222",
+          },
+        },
+        "FunctionName": "test-cluster-stop-runners",
+        "Handler": "index.handler",
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "testrunnertestrunnerrole26678EE0",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs14.x",
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "testrunnertestclusterstoprunnersLogRetentionC77F0BB5": Object {
+      "Properties": Object {
+        "LogGroupName": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "/aws/lambda/",
+              Object {
+                "Ref": "testrunnertestclusterstoprunners0DD77B77",
+              },
+            ],
+          ],
+        },
+        "RetentionInDays": 7,
+        "ServiceToken": Object {
+          "Fn::GetAtt": Array [
+            "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::LogRetention",
+    },
     "testrunnertestrunnerrole26678EE0": Object {
       "Properties": Object {
         "AssumeRolePolicyDocument": Object {
@@ -163,128 +346,6 @@ Object {
         "RoleName": "ProvisionRunnersRole",
       },
       "Type": "AWS::IAM::Role",
-    },
-    "testrunnertestrunnerstartrunnersBAD7F3F1": Object {
-      "DependsOn": Array [
-        "testrunnertestrunnerrole26678EE0",
-      ],
-      "Properties": Object {
-        "Code": Object {
-          "S3Bucket": Object {
-            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-us-east-1",
-          },
-          "S3Key": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.zip",
-        },
-        "Environment": Object {
-          "Variables": Object {
-            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
-            "CLUSTER_NAME": "test-cluster",
-            "CONTAINER_NAME": "github-actions-runner",
-            "EC2_CAPACITY_PROVIDERS": "amd64-cap-provider,arm64-cap-provider",
-            "EC2_TASK_DEF_FAMILY": "test-cluster-ec2",
-            "FARGATE_TASK_DEF_FAMILIES": "test-cluster-fg-arm64,test-cluster-fg-x86_64",
-            "REPO_NAME": "reponame",
-            "REPO_OWNER": "your",
-            "SECRET_NAME": "test-secret-name",
-            "SECURITY_GROUP": "sg-XXXXXXXXXXXXXXXXX",
-            "SUBNETS": "subnet-11111111111111111,subnet-22222222222222222",
-          },
-        },
-        "FunctionName": "test-runner-start-runners",
-        "Handler": "index.handler",
-        "Role": Object {
-          "Fn::GetAtt": Array [
-            "testrunnertestrunnerrole26678EE0",
-            "Arn",
-          ],
-        },
-        "Runtime": "nodejs14.x",
-      },
-      "Type": "AWS::Lambda::Function",
-    },
-    "testrunnertestrunnerstartrunnersLogRetentionDF15DD4F": Object {
-      "Properties": Object {
-        "LogGroupName": Object {
-          "Fn::Join": Array [
-            "",
-            Array [
-              "/aws/lambda/",
-              Object {
-                "Ref": "testrunnertestrunnerstartrunnersBAD7F3F1",
-              },
-            ],
-          ],
-        },
-        "RetentionInDays": 7,
-        "ServiceToken": Object {
-          "Fn::GetAtt": Array [
-            "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
-            "Arn",
-          ],
-        },
-      },
-      "Type": "Custom::LogRetention",
-    },
-    "testrunnertestrunnerstoprunners5C56F46D": Object {
-      "DependsOn": Array [
-        "testrunnertestrunnerrole26678EE0",
-      ],
-      "Properties": Object {
-        "Code": Object {
-          "S3Bucket": Object {
-            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-us-east-1",
-          },
-          "S3Key": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.zip",
-        },
-        "Environment": Object {
-          "Variables": Object {
-            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
-            "CLUSTER_NAME": "test-cluster",
-            "CONTAINER_NAME": "github-actions-runner",
-            "EC2_CAPACITY_PROVIDERS": "amd64-cap-provider,arm64-cap-provider",
-            "EC2_TASK_DEF_FAMILY": "test-cluster-ec2",
-            "FARGATE_TASK_DEF_FAMILIES": "test-cluster-fg-arm64,test-cluster-fg-x86_64",
-            "REPO_NAME": "reponame",
-            "REPO_OWNER": "your",
-            "SECRET_NAME": "test-secret-name",
-            "SECURITY_GROUP": "sg-XXXXXXXXXXXXXXXXX",
-            "SUBNETS": "subnet-11111111111111111,subnet-22222222222222222",
-          },
-        },
-        "FunctionName": "test-runner-stop-runners",
-        "Handler": "index.handler",
-        "Role": Object {
-          "Fn::GetAtt": Array [
-            "testrunnertestrunnerrole26678EE0",
-            "Arn",
-          ],
-        },
-        "Runtime": "nodejs14.x",
-      },
-      "Type": "AWS::Lambda::Function",
-    },
-    "testrunnertestrunnerstoprunnersLogRetention1492140A": Object {
-      "Properties": Object {
-        "LogGroupName": Object {
-          "Fn::Join": Array [
-            "",
-            Array [
-              "/aws/lambda/",
-              Object {
-                "Ref": "testrunnertestrunnerstoprunners5C56F46D",
-              },
-            ],
-          ],
-        },
-        "RetentionInDays": 7,
-        "ServiceToken": Object {
-          "Fn::GetAtt": Array [
-            "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
-            "Arn",
-          ],
-        },
-      },
-      "Type": "Custom::LogRetention",
     },
   },
   "Rules": Object {
