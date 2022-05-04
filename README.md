@@ -13,6 +13,12 @@ This CDK project includes the following stacks.
 - \<clusterName\>-funcs-stack
   - Create Lambda functions to start and to stop Github Actions Runner tasks.
 
+## Preparing
+
+Create a secret of AWS Secret Manager, which has the secret key named `GITHUB_TOKEN` which is setted value Github Personal Access Token.
+
+If you want to connet EC2 node of ECS cluster by SSH, create key pair.
+
 ## Configuration
 
 Create your configuration file in *config/* directory.
