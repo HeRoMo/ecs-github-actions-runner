@@ -2,9 +2,10 @@ import { InstanceClass, InstanceSize, InstanceType } from 'aws-cdk-lib/aws-ec2';
 import { AmiHardwareType, EcsOptimizedImage } from 'aws-cdk-lib/aws-ecs';
 import { ConfigDefinition } from '../lib/Config';
 
-const config: Partial<ConfigDefinition> = {
-  region: 'us-east-1',
-  clusterName: 'test-cluster',
+const config: ConfigDefinition = {
+  region: 'ap-northeast-1',
+  clusterName: 'your-cluster-name',
+  memoryLimitMiB: 3500,
   ec2Nodes: {
     amd64: {
       instanceType: InstanceType.of(InstanceClass.C6I, InstanceSize.LARGE),
@@ -24,15 +25,15 @@ const config: Partial<ConfigDefinition> = {
     },
   },
   fargate: {
-    enable: true,
-    cpu: 512,
-    memoryLimitMiB: 1024,
+    enable: false,
+    cpu: 1024,
+    memoryLimitMiB: 2048,
   },
   repo: {
-    owner: 'your',
-    name: 'reponame',
+    owner: 'owner',
+    name: 'repo-name',
   },
-  secretName: 'test-secret-name',
+  secretName: 'your-secret-name',
 };
 
 export default config;

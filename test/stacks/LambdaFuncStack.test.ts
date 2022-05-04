@@ -7,13 +7,18 @@ import { LambdaFuncStack } from '../../lib/stacks/LambdaFuncStack';
 test('Snapshot Test', () => {
   const app = new cdk.App();
   const info: EcsGithubActionsRunnerInfo = {
-    clusterName: 'test-cluster',
     containerName: 'github-actions-runner',
-    taskDefFamily: 'test-cluster',
-    capacityProviders: [
+    ec2TaskDefFamily: 'test-cluster-ec2',
+    ec2CapacityProviders: [
       'amd64-cap-provider',
       'arm64-cap-provider',
     ],
+    fargateTaskDefFamilies: [
+      'test-cluster-fg-arm64',
+      'test-cluster-fg-x86_64',
+    ],
+    subnets: ['subnet-11111111111111111', 'subnet-22222222222222222'],
+    securityGroup: 'sg-XXXXXXXXXXXXXXXXX',
   };
   const funcStack = new LambdaFuncStack(app, 'test-runner', info);
 

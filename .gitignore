@@ -4,6 +4,7 @@ cdk.out
 config/*
 !config/default.ts
 !config/test.ts
+!*-sample.ts
 
 tmp
 *.log

@@ -1,28 +1,25 @@
-// eslint-disable-next-line import/no-unresolved
-import { Callback, Context } from 'aws-lambda';
-
 import { TaskOperator, getTaskOpts } from '../TaskOperator';
 
 /**
  * Function to start Github action runner tasks.
- *
- * @param event
- * @param context
- * @param callback
  */
-export async function handler(
-  event: any,
-  context: Context,
-  callback: Callback,
-): Promise<void> {
+async function startTask(launchType: 'ec2'|'fargate') {
   const region = process.env.AWS_REGION;
   const taskOpts = getTaskOpts();
   const taskStarter = new TaskOperator(region, taskOpts);
-  const output = await taskStarter.startTasks();
+  const output = await taskStarter.startTasks(launchType);
 
-  callback(null, {
+  return {
     status: 200,
     message: 'start runner',
     output: JSON.stringify(output, null, 2),
-  });
+  };
+}
+
+export async function ec2Handler() {
+  return startTask('ec2');
+}
+
+export async function fargateHandler() {
+  return startTask('fargate');
 }

@@ -7,22 +7,29 @@ import {
   Cluster,
   ClusterProps,
   ContainerImage,
+  CpuArchitecture,
   Ec2TaskDefinition,
+  FargateTaskDefinition,
   LogDriver,
+  OperatingSystemFamily,
 } from 'aws-cdk-lib/aws-ecs';
 import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
 
-import { CONFIG, NodeConfig } from '../Config';
+import { CONFIG, Ec2NodeConfig } from '../Config';
+
+const GITHUB_RUNNER_IMAGE = 'ghcr.io/heromo/ecs-github-actions-runner:latest';
 
 /**
  * Information of Github actions runner cluster.
  */
 export interface EcsGithubActionsRunnerInfo {
-  clusterName: string;
   containerName: string;
-  taskDefFamily: string;
-  capacityProviders: string[];
+  ec2TaskDefFamily: string;
+  ec2CapacityProviders: string[];
+  fargateTaskDefFamilies: string[];
+  subnets: string[];
+  securityGroup: string;
 }
 
 /**
@@ -42,7 +49,7 @@ export class EcsGithubActionsRunner extends Construct {
   /**
    * Task definition family name
    */
-  private readonly taskDefinitionFamily: string;
+  private readonly ec2TaskDefinitionFamily: string;
 
   /**
    * Container name of Github actions runnter.
@@ -52,7 +59,12 @@ export class EcsGithubActionsRunner extends Construct {
   /**
    * Capacity Provider names of Github actions runner cluster.
    */
-  private readonly capacityProviders: string[] = [];
+  private readonly ec2CapacityProviders: string[] = [];
+
+  /**
+   * Fargate Task definition families
+   */
+  private readonly fargateTaskDefFamilies: string[] = [];
 
   /**
    * Constructor.
@@ -71,19 +83,30 @@ export class EcsGithubActionsRunner extends Construct {
     const clusterProps: ClusterProps = {
       clusterName: this.clusterName,
       vpc: this.vpc,
+      enableFargateCapacityProviders: CONFIG.fargate.enable,
     };
 
-    this.taskDefinitionFamily = this.clusterName;
+    this.ec2TaskDefinitionFamily = `${this.clusterName}-ec2`;
     this.runnerContainerName = 'github-actions-runner';
 
     this.cluster = new Cluster(this, this.clusterName, clusterProps);
     this.securityGroup = this.createSecurityGroup();
-    Object.entries(CONFIG.nodes).forEach(([key, node]) => {
+    Object.entries(CONFIG.ec2Nodes || {}).forEach(([key, node]) => {
       const provider = this.addAsgCapacity(key, node);
-      this.capacityProviders.push(provider.capacityProviderName);
+      this.ec2CapacityProviders.push(provider.capacityProviderName);
     });
 
-    this.createTaskDefinition();
+    const logGroup = new LogGroup(this, `${this.clusterName}-lg`, {
+      logGroupName: `/ecs/${this.clusterName}`,
+      retention: RetentionDays.ONE_WEEK,
+    });
+
+    if (Object.entries(CONFIG.ec2Nodes || {}).length > 0) {
+      this.createEc2TaskDefinition(logGroup);
+    }
+    if (CONFIG.fargate.enable) {
+      this.fargateTaskDefFamilies = this.createFargateTaskDefinitions(logGroup);
+    }
   }
 
   /**
@@ -91,31 +114,27 @@ export class EcsGithubActionsRunner extends Construct {
    */
   public get clusterInfo(): EcsGithubActionsRunnerInfo {
     return {
-      clusterName: this.clusterName,
       containerName: this.runnerContainerName,
-      taskDefFamily: this.taskDefinitionFamily,
-      capacityProviders: this.capacityProviders,
+      ec2TaskDefFamily: this.ec2TaskDefinitionFamily,
+      ec2CapacityProviders: this.ec2CapacityProviders,
+      fargateTaskDefFamilies: this.fargateTaskDefFamilies,
+      subnets: this.vpc.publicSubnets.map((subnet) => subnet.subnetId),
+      securityGroup: this.securityGroup.securityGroupId,
     };
   }
 
   /**
-   * Create Task Definition
+   * Create EC2Task Definition
    */
-  private createTaskDefinition() {
-    const logGroup = new LogGroup(this, `${this.clusterName}-lg`, {
-      logGroupName: `/ecs/${this.clusterName}`,
-      retention: RetentionDays.ONE_WEEK,
-    });
-
-    const taskDefinition = new Ec2TaskDefinition(this, `${this.clusterName}-td`, {
-      family: this.taskDefinitionFamily,
+  private createEc2TaskDefinition(logGroup: LogGroup) {
+    const taskDefinition = new Ec2TaskDefinition(this, `${this.clusterName}-td-ec2`, {
+      family: this.ec2TaskDefinitionFamily,
     });
 
     const container = taskDefinition.addContainer('github-actions-runner', {
       containerName: this.runnerContainerName,
       memoryLimitMiB: CONFIG.memoryLimitMiB,
-      hostname: this.clusterName,
-      image: ContainerImage.fromRegistry('ghcr.io/heromo/ecs-github-actions-runner:latest'),
+      image: ContainerImage.fromRegistry(GITHUB_RUNNER_IMAGE),
       logging: LogDriver.awsLogs({
         logGroup,
         streamPrefix: 'github-actions-runner',
@@ -138,6 +157,41 @@ export class EcsGithubActionsRunner extends Construct {
   }
 
   /**
+   * Create Fargate Task Definition
+   */
+  private createFargateTaskDefinitions(logGroup: LogGroup) {
+    const taskDefs = [CpuArchitecture.X86_64, CpuArchitecture.ARM64].map((cpuArchitecture) => {
+      // eslint-disable-next-line no-underscore-dangle
+      const suffix = cpuArchitecture._cpuArchitecture.toLowerCase();
+      const taskDefinition = new FargateTaskDefinition(this, `${this.clusterName}-td-fg-${suffix}`, {
+        family: `${this.clusterName}-fg-${suffix}`,
+        cpu: CONFIG.fargate.cpu,
+        memoryLimitMiB: CONFIG.fargate.memoryLimitMiB,
+        runtimePlatform: {
+          cpuArchitecture,
+          operatingSystemFamily: OperatingSystemFamily.LINUX,
+        },
+      });
+
+      taskDefinition.addContainer('github-actions-runner', {
+        containerName: this.runnerContainerName,
+        memoryLimitMiB: CONFIG.memoryLimitMiB,
+        image: ContainerImage.fromRegistry(GITHUB_RUNNER_IMAGE),
+        logging: LogDriver.awsLogs({
+          logGroup,
+          streamPrefix: 'github-actions-runner',
+        }),
+        environment: {
+          REPOSITORY_URL: CONFIG.repositoryUrl,
+          TOKEN: 'set_self-hosted_runner_token',
+        },
+      });
+      return taskDefinition;
+    });
+    return taskDefs.map((def) => def.family);
+  }
+
+  /**
    * Create a security group for cluster node
    *
    * @returns Security Group
@@ -157,19 +211,19 @@ export class EcsGithubActionsRunner extends Construct {
    * Add autoscaling group capacity
    *
    * @param nodeName cluster node name
-   * @param node cluster node configuration
+   * @param config cluster node configuration
    * @returns Autoscaling group capacity provider
    */
-  private addAsgCapacity(nodeName: string, node: NodeConfig) {
+  private addAsgCapacity(nodeName: string, config: Ec2NodeConfig) {
     const autoScalingGroup = new AutoScalingGroup(this, `ASG-${nodeName}`, {
       vpc: this.vpc,
       autoScalingGroupName: `${this.clusterName}-${nodeName}`,
-      instanceType: node.instanceType,
-      machineImage: node.machineImage,
-      spotPrice: node.spotPrice,
-      minCapacity: node.minCapacity,
-      maxCapacity: node.maxCapacity,
-      keyName: node.sshKey,
+      instanceType: config.instanceType,
+      machineImage: config.machineImage,
+      spotPrice: config.spotPrice,
+      minCapacity: config.minCapacity,
+      maxCapacity: config.maxCapacity,
+      keyName: config.sshKey,
       securityGroup: this.securityGroup,
       terminationPolicies: [
         TerminationPolicy.OLDEST_INSTANCE,
