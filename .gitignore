@@ -10,3 +10,5 @@ tmp
 *.log
 .tool_versions
 .node_version
+
+docker/*.yml
