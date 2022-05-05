@@ -63,6 +63,7 @@ yarn cdk destroy --all
 
 ## Start and stop Github actions runner tasks
 
+This cdk application include lambda functions to operate Github actions runner tasks.
 To start task, run the following command.
 
 ```bash
@@ -79,6 +80,21 @@ To stop task, run the following command.
 aws lambda invoke --function-name <clusterName>-stop-runners /dev/null
 ```
 
+## Github runner Docker image
+
+You can pull Github runner image from `ghcr.io/heromo/ecs-github-actions-runner:latest` .
+
+This image is configurable by the following environment variables.
+
+<!-- textlint-disable ja-spacing/ja-no-space-around-parentheses -->
+- `REPOSITORY_URL`: [Required] Repository to add the runner to.
+- `TOKEN`: [Required] Registration token.
+- `EPHEMERAL`: [Optional] runner runs ephemeral mode, If `yes` setted.
+- `LABELS`: [Optional] Extra labels in addition to the default labels.
+<!-- textlint-enable ja-spacing/ja-no-space-around-parentheses -->
+
+`REPOSITORY_URL` is setted in ECS task definition.
+If you use lamba function to start runners, `TOKEN` is setted automatically.
 
 ## Useful commands
 
