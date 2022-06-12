@@ -7,7 +7,8 @@
   "packageRules": [
     {
       "matchPackageNames": ["typescript"],
-      "matchUpdateTypes": ["minor","patch"]
+      "matchUpdateTypes": ["major"],
+      "enabled": false
     }
   ]
 }
