@@ -16,7 +16,7 @@
   "devDependencies": {
     "@types/aws-lambda": "8.10.100",
     "@types/config": "0.0.41",
-    "@types/jest": "27.5.2",
+    "@types/jest": "28.1.1",
     "@types/node": "16.11.39",
     "@types/source-map-support": "0.5.4",
     "@typescript-eslint/eslint-plugin": "5.27.1",
@@ -28,8 +28,8 @@
     "eslint-plugin-googleappsscript": "1.0.4",
     "eslint-plugin-import": "2.26.0",
     "eslint-plugin-jest": "26.5.3",
-    "jest": "27.5.1",
-    "ts-jest": "27.1.5",
+    "jest": "28.1.1",
+    "ts-jest": "28.0.4",
     "ts-node": "10.8.1",
     "typescript": "3.9.10"
   },
