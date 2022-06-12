@@ -9,6 +9,11 @@
       "matchPackageNames": ["typescript"],
       "matchUpdateTypes": ["major"],
       "enabled": false
+    },
+    {
+      "extends": "group:jestMonorepo",
+      "matchUpdateTypes": ["major"],
+      "enabled": false
     }
   ]
 }
