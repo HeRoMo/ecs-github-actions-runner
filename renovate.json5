@@ -14,6 +14,12 @@
       "extends": "group:jestMonorepo",
       "matchUpdateTypes": ["major"],
       "enabled": false
+    },
+    {
+      "matchDepTypes":["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "excludePackageNames": ["aws-cdk", "typescript"],
+      "automerge": true
     }
   ]
 }
