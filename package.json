@@ -21,7 +21,7 @@
     "@types/source-map-support": "0.5.6",
     "@typescript-eslint/eslint-plugin": "5.38.0",
     "@typescript-eslint/parser": "5.38.0",
-    "aws-cdk": "2.42.0",
+    "aws-cdk": "2.43.1",
     "esbuild": "0.15.9",
     "eslint": "8.23.1",
     "eslint-config-airbnb-base": "15.0.0",
@@ -38,7 +38,7 @@
     "@aws-sdk/client-secrets-manager": "3.171.0",
     "@aws-sdk/types": "3.171.0",
     "@octokit/rest": "19.0.4",
-    "aws-cdk-lib": "2.42.0",
+    "aws-cdk-lib": "2.43.1",
     "config": "3.3.8",
     "constructs": "10.1.106",
     "source-map-support": "0.5.21"
