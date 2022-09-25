@@ -18,6 +18,6 @@ jobs:
           cache: yarn
       - run: yarn install
       - name: pronto run
-        uses: HeRoMo/pronto-action@v1.36.0
+        uses: HeRoMo/pronto-action@1.37.0
         with:
           runner: eslint_npm
