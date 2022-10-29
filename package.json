@@ -40,7 +40,7 @@
     "@octokit/rest": "19.0.5",
     "aws-cdk-lib": "2.49.0",
     "config": "3.3.8",
-    "constructs": "10.1.140",
+    "constructs": "10.1.143",
     "source-map-support": "0.5.21"
   }
 }
