@@ -2186,10 +2186,10 @@ confusing-browser-globals@^1.0.10:
   resolved "https://registry.yarnpkg.com/confusing-browser-globals/-/confusing-browser-globals-1.0.11.tgz#ae40e9b57cdd3915408a2805ebd3a5585608dc81"
   integrity sha512-JsPKdmh8ZkmnHxDk55FZ1TqVLvEQTvoByJZRN9jzI0UjxK/QgAmsphz7PGtqgPieQZ/CQcHWXCR7ATDNhGe+YA==
 
-constructs@10.1.157:
-  version "10.1.157"
-  resolved "https://registry.yarnpkg.com/constructs/-/constructs-10.1.157.tgz#0c226b006f6a3d217740c68b5b72cf6da4798639"
-  integrity sha512-GEIYHVB2J96MGo/7Au8ImQ54E8OnnnoUpXfcwqO0x/Rw2jVUEiFmSwKP/LTcOUF0tqnU5daHjoeaPnTb7S6nrw==
+constructs@10.1.158:
+  version "10.1.158"
+  resolved "https://registry.yarnpkg.com/constructs/-/constructs-10.1.158.tgz#9ad5581f6f6837016cb24e9f5070eb1d01e85477"
+  integrity sha512-BVwOn2sY1KRoeVbHuQ8WStL/Yktg4ZwAq4f0tR0VqRIOm6syg9lO8yabluaGBB8OilhC/FyM1I/ZOowYZJu90w==
 
 convert-source-map@^1.4.0, convert-source-map@^1.6.0, convert-source-map@^1.7.0:
   version "1.8.0"
