@@ -150,7 +150,7 @@ export class LambdaConstructor extends Construct {
       entry,
       handler,
       role,
-      runtime: Runtime.NODEJS_16_X,
+      runtime: Runtime.NODEJS_18_X,
       bundling: {
         minify: true,
         sourceMap: true,
