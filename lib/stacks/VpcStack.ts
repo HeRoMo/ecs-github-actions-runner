@@ -1,5 +1,6 @@
 import { Stack, StackProps } from 'aws-cdk-lib';
 import {
+  IpAddresses,
   SubnetConfiguration, SubnetType, Vpc, VpcProps,
 } from 'aws-cdk-lib/aws-ec2';
 import { Construct } from 'constructs';
@@ -24,7 +25,7 @@ export class VpcStack extends Stack {
 
     const vpcProps: VpcProps = {
       vpcName,
-      cidr: '10.0.0.0/16',
+      ipAddresses: IpAddresses.cidr('10.0.0.0/16'),
       vpnGateway: false,
       natGateways: 0,
       subnetConfiguration,
