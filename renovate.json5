@@ -21,6 +21,11 @@
       "matchUpdateTypes": ["minor", "patch"],
       "excludePackageNames": ["aws-cdk", "typescript"],
       "automerge": true
+    },
+    {
+      "matchPackageNames":["HeRoMo/pronto-action"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
     }
   ]
 }
