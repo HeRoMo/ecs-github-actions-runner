@@ -2,11 +2,11 @@
 FROM debian:bullseye-slim
 
 # https://github.com/actions/runner/releases/latest
-ARG RUNNER_VERSION=2.299.1
+ARG RUNNER_VERSION=2.300.2
 # SHA Hash of actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
-ARG SHA_AMD64='147c14700c6cb997421b9a239c012197f11ea9854cd901ee88ead6fe73a72c74'
+ARG SHA_AMD64='ed5bf2799c1ef7b2dd607df66e6b676dff8c44fb359c6fedc9ebf7db53339f0c'
 # SHA Hash of actions-runner-linux-arm64-${RUNNER_VERSION}.tar.gz
-ARG SHA_ARM64='debe1cc9656963000a4fbdbb004f475ace5b84360ace2f7a191c1ccca6a16c00'
+ARG SHA_ARM64='804693a178db3265eb43e09c3b4e67ef28f6d64133778b38d66dcffd2f21057d'
 
 ARG USERNAME=user
 ARG GROUPNAME=user
