@@ -37,7 +37,7 @@
     "@aws-sdk/client-ecs": "3.264.0",
     "@aws-sdk/client-secrets-manager": "3.264.0",
     "@aws-sdk/types": "3.257.0",
-    "@octokit/rest": "19.0.5",
+    "@octokit/rest": "19.0.7",
     "aws-cdk-lib": "2.63.1",
     "config": "3.3.8",
     "constructs": "10.1.240",
