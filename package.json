@@ -18,7 +18,7 @@
     "@types/config": "3.3.3",
     "@types/jest": "27.5.2",
     "@types/node": "20.8.10",
-    "@types/source-map-support": "0.5.9",
+    "@types/source-map-support": "0.5.10",
     "@typescript-eslint/eslint-plugin": "6.10.0",
     "@typescript-eslint/parser": "6.10.0",
     "aws-cdk": "2.75.0",
