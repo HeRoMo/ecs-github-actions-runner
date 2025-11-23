@@ -17,7 +17,7 @@
     "@types/aws-lambda": "8.10.156",
     "@types/config": "3.3.4",
     "@types/jest": "27.5.2",
-    "@types/node": "22.18.11",
+    "@types/node": "22.19.1",
     "@types/source-map-support": "0.5.10",
     "@typescript-eslint/eslint-plugin": "8.46.2",
     "@typescript-eslint/parser": "8.46.2",
