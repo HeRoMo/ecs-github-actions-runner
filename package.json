@@ -21,7 +21,7 @@
     "@types/source-map-support": "0.5.10",
     "@typescript-eslint/eslint-plugin": "8.55.0",
     "@typescript-eslint/parser": "8.55.0",
-    "aws-cdk": "2.1101.0",
+    "aws-cdk": "2.1106.0",
     "esbuild": "0.27.3",
     "eslint": "9.39.2",
     "eslint-config-airbnb-base": "15.0.0",
