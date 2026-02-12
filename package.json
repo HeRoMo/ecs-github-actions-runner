@@ -39,7 +39,7 @@
     "@aws-sdk/types": "3.969.0",
     "@octokit/rest": "22.0.0",
     "aws-cdk-lib": "2.75.0",
-    "config": "4.2.0",
+    "config": "4.3.0",
     "constructs": "10.4.4",
     "source-map-support": "0.5.21"
   }
