@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@types/aws-lambda": "8.10.160",
-    "@types/config": "3.3.4",
+    "@types/config": "4.4.0",
     "@types/jest": "27.5.2",
     "@types/node": "24.12.2",
     "@types/source-map-support": "0.5.10",
@@ -39,7 +39,7 @@
     "@aws-sdk/types": "3.973.8",
     "@octokit/rest": "22.0.0",
     "aws-cdk-lib": "2.75.0",
-    "config": "4.2.0",
+    "config": "4.4.1",
     "constructs": "10.4.4",
     "source-map-support": "0.5.21"
   }
