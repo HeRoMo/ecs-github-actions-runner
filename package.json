@@ -38,7 +38,7 @@
     "@aws-sdk/client-secrets-manager": "3.1088.0",
     "@aws-sdk/types": "3.974.2",
     "@octokit/rest": "22.0.1",
-    "aws-cdk-lib": "2.75.0",
+    "aws-cdk-lib": "2.268.0",
     "config": "4.4.1",
     "constructs": "10.6.0",
     "source-map-support": "0.5.21"
