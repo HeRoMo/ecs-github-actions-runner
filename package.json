@@ -34,9 +34,9 @@
     "typescript": "3.9.10"
   },
   "dependencies": {
-    "@aws-sdk/client-ecs": "3.1088.0",
-    "@aws-sdk/client-secrets-manager": "3.1088.0",
-    "@aws-sdk/types": "3.974.2",
+    "@aws-sdk/client-ecs": "3.1127.0",
+    "@aws-sdk/client-secrets-manager": "3.1127.0",
+    "@aws-sdk/types": "3.974.5",
     "@octokit/rest": "22.0.1",
     "aws-cdk-lib": "2.75.0",
     "config": "4.4.1",
