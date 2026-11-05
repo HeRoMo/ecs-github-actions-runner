@@ -2098,10 +2098,17 @@ concat-map@0.0.1:
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
   integrity sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=
 
-config@*, config@4.4.1:
+config@*:
   version "4.4.1"
   resolved "https://registry.yarnpkg.com/config/-/config-4.4.1.tgz#01e3f6bdd261ccf211a4fdb2f1b319aa5a2928ad"
   integrity sha512-XfN4Q4+wBKkGtgMyQ+5ayjepdb0MrdiGKfBr0G1PTLx9rnqsX+Xiw03LEUtSALZU0UVfcFp6+xYV0NL8HLF94g==
+  dependencies:
+    json5 "^2.2.3"
+
+config@4.4.2:
+  version "4.4.2"
+  resolved "https://registry.yarnpkg.com/config/-/config-4.4.2.tgz#adab67a87fcb5f84edcacb3f159ccdb31ad8b901"
+  integrity sha512-5HJD7TX70gOG2dAd72eDjDeSTYn6D8nOiKgysQQS8mRUo9X1wDtlzb1JlmIWkP+sM9zKRVdYJxmj+qmCsYu6DQ==
   dependencies:
     json5 "^2.2.3"
 
